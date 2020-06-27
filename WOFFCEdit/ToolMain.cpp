@@ -2,6 +2,7 @@
 #include "resource.h"
 #include <vector>
 #include <sstream>
+#include <iostream>
 
 //
 //ToolMain Class
@@ -18,6 +19,8 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
+
+	
 	
 }
 
@@ -39,6 +42,8 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	//window size, handle etc for directX
 	m_width		= width;
 	m_height	= height;
+
+	SetCursorPos(m_width / 2, (m_height / 2) + 150);
 	
 	m_d3dRenderer.Initialize(handle, m_width, m_height);
 
@@ -306,13 +311,39 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
+		m_mouseX = GET_X_LPARAM(msg->lParam);
+		
+		m_mouseY = GET_Y_LPARAM(msg->lParam);
 		break;
 
-	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
-		//set some flag for the mouse button in inputcommands
+	case WM_LBUTTONDOWN:	
+		m_toolInputCommands.mouseLeft = true;
 		break;
 
+	case WM_LBUTTONUP:
+		m_toolInputCommands.mouseLeft = false;
+		break;
+
+	case WM_RBUTTONDOWN:
+		m_toolInputCommands.mouseRight = true;
+		break;
+
+	case WM_RBUTTONUP:
+		m_toolInputCommands.mouseRight = false;
+		break;
 	}
+
+	std::cout << m_mouseX << std::endl;
+	std::cout << "Sup" << std::endl;
+	std::string test = "Mouse X pos: " + std::to_string(m_mouseX) + "Mouse Y pos: " + std::to_string(m_mouseY);
+	
+	OutputDebugStringA(test.c_str());
+	OutputDebugStringA("\n");
+	
+
+	m_toolInputCommands.mouseX = m_mouseX;
+	m_toolInputCommands.MouseY = m_mouseY;
+
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
 	if (m_keyArray['W'])
@@ -349,5 +380,23 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.rotLeft = false;
 
-	//WASD
+	//Vertical Movement
+	if (m_keyArray[VK_SPACE]) 
+	{
+		m_toolInputCommands.up = true;
+	}
+	else m_toolInputCommands.up = false;
+
+	if (m_keyArray[VK_CONTROL]) {
+
+		m_toolInputCommands.down = true;
+	}
+	else m_toolInputCommands.down = false;
+
+
+	if (m_keyArray[VK_SHIFT]) {
+
+		m_toolInputCommands.showCursor = true;
+	}
+	else m_toolInputCommands.showCursor = false;
 }
