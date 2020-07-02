@@ -20,7 +20,7 @@ ToolMain::ToolMain()
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
 
-	
+	mouse_LB_Down = false;
 	
 }
 
@@ -287,6 +287,13 @@ void ToolMain::Tick(MSG *msg)
 	//do we have a selection
 	//do we have a mode
 	//are we clicking / dragging /releasing
+
+	if (m_toolInputCommands.mouseLeft) 
+	{
+		m_selectedObject = m_d3dRenderer.MousePicking();
+		m_toolInputCommands.mouseLeft = false;
+	}
+
 	//has something changed
 		//update Scenegraph
 		//add to scenegraph
@@ -333,8 +340,7 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 	}
 
-	std::cout << m_mouseX << std::endl;
-	std::cout << "Sup" << std::endl;
+
 	std::string test = "Mouse X pos: " + std::to_string(m_mouseX) + "Mouse Y pos: " + std::to_string(m_mouseY);
 	
 	OutputDebugStringA(test.c_str());

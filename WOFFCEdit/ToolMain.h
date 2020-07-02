@@ -49,5 +49,5 @@ private:	//variables
 	int m_currentChunk;			//the current chunk of thedatabase that we are operating on.  Dictates loading and saving. 
 	
 	float m_mouseX, m_mouseY;
-	
+	bool mouse_LB_Down;
 };

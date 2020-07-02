@@ -13,7 +13,7 @@ public:
 
 	void init();
 	void update(InputCommands* input, float m_movespeed);
-	void mouseMovement(float xPos, float yPos);
+	void mouseMovement(float xPos, float yPos, bool rightMouseButton);
 
 	DirectX::SimpleMath::Vector3 getLookDirection() { return m_camLookDirection; }
 	DirectX::SimpleMath::Vector3 getCamPosition() { return m_camPosition; }

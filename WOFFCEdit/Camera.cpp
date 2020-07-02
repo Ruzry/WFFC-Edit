@@ -72,7 +72,7 @@ void Camera::update(InputCommands* input, float m_movespeed)
 	m_camLookDirection.z = cos((m_camOrientation.y)*m_pi / 180);
 	m_camLookDirection.Normalize();
 
-	mouseMovement(input->mouseX, input->MouseY);
+	mouseMovement(input->mouseX, input->MouseY, input->mouseRight);
 
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
@@ -109,7 +109,7 @@ void Camera::update(InputCommands* input, float m_movespeed)
 
 }
 
-void Camera::mouseMovement(float xPos, float yPos)
+void Camera::mouseMovement(float xPos, float yPos, bool rightMouseButton)
 {
 	if (firstMouse)
 	{

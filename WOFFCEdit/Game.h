@@ -51,6 +51,9 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
+	//Added Functionality
+	int MousePicking();
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
@@ -71,6 +74,7 @@ private:
 
 	//functionality
 	float								m_movespeed;
+	RECT								m_screenDimensions;
 
 	//camera
 	Camera camera;
