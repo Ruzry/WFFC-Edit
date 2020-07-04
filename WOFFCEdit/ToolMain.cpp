@@ -377,32 +377,39 @@ void ToolMain::UpdateInput(MSG * msg)
 	//rotation
 	if (m_keyArray['E'])
 	{
-		m_toolInputCommands.rotRight = true;
-	}
-	else m_toolInputCommands.rotRight = false;
-	if (m_keyArray['Q'])
-	{
-		m_toolInputCommands.rotLeft = true;
-	}
-	else m_toolInputCommands.rotLeft = false;
-
-	//Vertical Movement
-	if (m_keyArray[VK_SPACE]) 
-	{
 		m_toolInputCommands.up = true;
 	}
 	else m_toolInputCommands.up = false;
-
-	if (m_keyArray[VK_CONTROL]) {
-
+	if (m_keyArray['Q'])
+	{
 		m_toolInputCommands.down = true;
 	}
 	else m_toolInputCommands.down = false;
 
+	//Vertical Movement
+	//if (m_keyArray[VK_SPACE]) 
+	//{
+	//	m_toolInputCommands.up = true;
+	//}
+	//else m_toolInputCommands.up = false;
+
+	//if (m_keyArray[VK_CONTROL]) {
+
+	//	m_toolInputCommands.down = true;
+	//}
+	//else m_toolInputCommands.down = false;
+
+	if (m_keyArray[VK_LMENU]) {
+	
+		m_toolInputCommands.leftAlt = true;
+	}
+	else 
+		m_toolInputCommands.leftAlt = false;
+
 
 	if (m_keyArray[VK_SHIFT]) {
 
-		m_toolInputCommands.showCursor = true;
+		m_toolInputCommands.speedUp = true;
 	}
-	else m_toolInputCommands.showCursor = false;
+	else m_toolInputCommands.speedUp = false;
 }

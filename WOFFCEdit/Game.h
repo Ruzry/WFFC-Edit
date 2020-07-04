@@ -79,6 +79,10 @@ private:
 	//camera
 	Camera camera;
 
+	//Mouse Picker
+	int selectedID, previousID;
+	bool selected;
+
 	//control variables
 	bool m_grid;							//grid rendering on / off
 	// Device resources.

@@ -10,10 +10,13 @@ struct InputCommands
 	bool rotLeft;
 	bool up;
 	bool down;
+	bool speedUp;
 	bool showCursor;
 
 	float mouseX;
 	float MouseY;
 	bool mouseLeft;
 	bool mouseRight;
+
+	bool leftAlt;
 };

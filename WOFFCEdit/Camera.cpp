@@ -57,20 +57,10 @@ void Camera::init()
 
 void Camera::update(InputCommands* input, float m_movespeed)
 {
-
-	if (input->rotRight)
-	{
-		m_camOrientation.y -= m_camRotRate;
-	}
-	if (input->rotLeft)
-	{
-		m_camOrientation.y += m_camRotRate;
-	}
-
-	//create look direction from Euler angles in m_camOrientation
-	m_camLookDirection.x = sin((m_camOrientation.y)*m_pi / 180);
-	m_camLookDirection.z = cos((m_camOrientation.y)*m_pi / 180);
-	m_camLookDirection.Normalize();
+	////create look direction from Euler angles in m_camOrientation
+	//m_camLookDirection.x = sin((m_camOrientation.y)*m_pi / 180);
+	//m_camLookDirection.z = cos((m_camOrientation.y)*m_pi / 180);
+	//m_camLookDirection.Normalize();
 
 	mouseMovement(input->mouseX, input->MouseY, input->mouseRight);
 
@@ -78,30 +68,43 @@ void Camera::update(InputCommands* input, float m_movespeed)
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
 	m_camLookDirection.Cross(m_camRight, m_camUp);
 	
-	//process input and update stuff
-	if (input->forward)
-	{
-		m_camPosition += m_camLookDirection * m_movespeed;
-	}
-	if (input->back)
-	{
-		m_camPosition -= m_camLookDirection * m_movespeed;
-	}
-	if (input->right)
-	{
-		m_camPosition += m_camRight * m_movespeed;
-	}
-	if (input->left)
-	{
-		m_camPosition -= m_camRight * m_movespeed;
-	}
-	if (input->up) 
-	{
-		m_camPosition -= m_camUp * m_movespeed;
-	}
-	if (input->down) 
-	{
-		m_camPosition += m_camUp * m_movespeed;
+	float movementSpeed = m_movespeed;
+
+	if (input->mouseRight) {
+
+		if (input->speedUp)
+		{
+			movementSpeed *= 3.0;
+
+		}
+		else
+			movementSpeed = m_movespeed;
+
+		//process input and update stuff
+		if (input->forward)
+		{
+			m_camPosition += m_camLookDirection * movementSpeed;
+		}
+		if (input->back)
+		{
+			m_camPosition -= m_camLookDirection * movementSpeed;
+		}
+		if (input->right)
+		{
+			m_camPosition += m_camRight * movementSpeed;
+		}
+		if (input->left)
+		{
+			m_camPosition -= m_camRight * movementSpeed;
+		}
+		if (input->up)
+		{
+			m_camPosition -= m_camUp * movementSpeed;
+		}
+		if (input->down)
+		{
+			m_camPosition += m_camUp * movementSpeed;
+		}
 	}
 
 	//update lookat point
@@ -123,23 +126,28 @@ void Camera::mouseMovement(float xPos, float yPos, bool rightMouseButton)
 	m_lastX = xPos;
 	m_lastY = yPos;
 
-	xOffset *= m_cameraSensitivity;
-	yOffset *= m_cameraSensitivity;
+	if (rightMouseButton) {
 
-	m_yaw += xOffset;
-	m_pitch -= yOffset;
+		xOffset *= m_cameraSensitivity;
+		yOffset *= m_cameraSensitivity;
+
+		m_yaw += xOffset;
+		m_pitch -= yOffset;
 
 
-	if (m_pitch > 89.0f)
-		m_pitch = 89.0f;
-	if (m_pitch < -89.0f)
-		m_pitch = -89.0f;
+		if (m_pitch > 89.0f)
+			m_pitch = 89.0f;
+		if (m_pitch < -89.0f)
+			m_pitch = -89.0f;
 
-	m_camLookDirection.x = cos(toRadians(m_yaw)) * cos(toRadians(m_pitch));
-	m_camLookDirection.y = sin(toRadians(m_pitch));
-	m_camLookDirection.z = sin(toRadians(m_yaw)) * cos(toRadians(m_pitch));
-	m_camLookDirection.Normalize();
+	}
 
+		m_camLookDirection.x = cos(toRadians(m_yaw)) * cos(toRadians(m_pitch));
+		m_camLookDirection.y = sin(toRadians(m_pitch));
+		m_camLookDirection.z = sin(toRadians(m_yaw)) * cos(toRadians(m_pitch));
+		m_camLookDirection.Normalize();
+
+	
 	//cos
 }
 

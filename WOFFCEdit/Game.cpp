@@ -27,6 +27,11 @@ Game::Game()
 	//functional
 	m_movespeed = 0.30;
 
+	selectedID = -1;
+	previousID = 0;
+
+	selected = false;
+
 	camera.init();
 
 	//HCURSOR curs;
@@ -208,7 +213,7 @@ void Game::Render()
 	//CAMERA POSITION ON HUD
 	m_sprites->Begin();
 	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(camera.getCamPosition().x) + L"Cam Y: " + std::to_wstring(camera.getCamPosition().y) + L"Cam Z: " + std::to_wstring(camera.getCamPosition().z);
+	std::wstring var = L"Cam X: " + std::to_wstring(camera.getCamPosition().x) + L" Cam Y: " + std::to_wstring(camera.getCamPosition().y) + L" Cam Z: " + std::to_wstring(camera.getCamPosition().z);
 	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
 	m_sprites->End();
 
@@ -227,7 +232,7 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
 
 		m_deviceResources->PIXEndEvent();
 	}
@@ -447,8 +452,6 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 
 int Game::MousePicking()
 {
-
-	int selectedID = -1;
 	float pickedDistance = 0;
 	float shortestDistance = 0.0f, currentDistance = 0.0f;
 	bool firstpick = true;
@@ -457,6 +460,10 @@ int Game::MousePicking()
 	//they may look the same but note, the difference in Z;
 	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.MouseY, 0.0f, 1.0f);
 	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.MouseY, 1.0f, 1.0f);
+
+	previousID = selectedID;
+
+	selected = false;
 
 	//Loop through entire display list of of objects and pick with in each turn.
 	for (int i = 0; i < m_displayList.size(); i++) {
@@ -497,12 +504,33 @@ int Game::MousePicking()
 					selectedID = i;
 					shortestDistance = pickedDistance;
 
-				}
-				
+					selected = true;
+
+				}	
 			}
 		}
+
+
 	}
 
+	if (selected) {
+
+		if(selectedID >= 0)
+			m_displayList[selectedID].m_wireframe = true;
+		if (previousID >= 0 && previousID != selectedID)
+			m_displayList[previousID].m_wireframe = false;
+
+	}
+	else 
+	{
+		if (previousID >= 0)
+			m_displayList[previousID].m_wireframe = false;
+
+		if (selectedID >= 0)
+			m_displayList[selectedID].m_wireframe = false;
+
+		selectedID = -1;
+	}
 
 	return selectedID;
 }
