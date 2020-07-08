@@ -52,11 +52,14 @@ public:
 	void ClearDisplayList();
 
 	//Added Functionality
-	int MousePicking();
+	std::vector<int> MousePicking(InputCommands* input);
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
+
+
+	std::vector<DisplayObject>* getDisplayList() { return &m_displayList; }
 
 private:
 
@@ -82,6 +85,9 @@ private:
 	//Mouse Picker
 	int selectedID, previousID;
 	bool selected;
+
+	std::vector<int> selectedIDs;
+	std::vector<int> previousIDs;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

@@ -9,6 +9,7 @@
 #include "resource.h"
 #include "MFCFrame.h"
 #include "SelectDialogue.h"
+#include "InspectorDialogue.h"
 
 
 class MFCMain : public CWinApp 
@@ -26,6 +27,8 @@ private:
 	ToolMain m_ToolSystem;	//Instance of Tool System that we interface to. 
 	CRect WindowRECT;	//Window area rectangle. 
 	SelectDialogue m_ToolSelectDialogue;			//for modeless dialogue, declare it here
+	InspectorDialogue m_InspectorDialogue;
+
 
 	int m_width;		
 	int m_height;

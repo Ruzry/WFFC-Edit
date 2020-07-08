@@ -450,7 +450,7 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
 }
 
-int Game::MousePicking()
+std::vector<int> Game::MousePicking(InputCommands* input)
 {
 	float pickedDistance = 0;
 	float shortestDistance = 0.0f, currentDistance = 0.0f;
@@ -462,6 +462,8 @@ int Game::MousePicking()
 	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.MouseY, 1.0f, 1.0f);
 
 	previousID = selectedID;
+
+	previousIDs = selectedIDs;
 
 	selected = false;
 
@@ -501,7 +503,35 @@ int Game::MousePicking()
 
 				if (pickedDistance <= shortestDistance)
 				{
+
+					if (input->leftCtrl) {
+
+						bool removed = false;
+
+						//If Selected IDs contains it already, then remove it instead
+						for (int j = 0; j < selectedIDs.size(); j++) {
+							
+							if (selectedIDs[j] == i) {
+								selectedIDs.erase(selectedIDs.begin() + j);
+								removed = true;
+							
+							}
+						}
+
+						if (!removed) {
+
+							selectedIDs.push_back(i);
+						}
+
+					}
+					else
+					{
+						selectedIDs.clear();
+						selectedIDs.push_back(i);
+
+					}
 					selectedID = i;
+
 					shortestDistance = pickedDistance;
 
 					selected = true;
@@ -513,26 +543,52 @@ int Game::MousePicking()
 
 	}
 
+	if (input->mainWindow == false)
+		selected = true;
+
 	if (selected) {
 
-		if(selectedID >= 0)
-			m_displayList[selectedID].m_wireframe = true;
-		if (previousID >= 0 && previousID != selectedID)
-			m_displayList[previousID].m_wireframe = false;
+		if (previousIDs.size() > 0) {
+			for (int i = 0; i < previousIDs.size(); i++) {
+
+				m_displayList[previousIDs[i]].m_wireframe = false;
+
+			}
+		}
+
+
+		if (selectedIDs.size() > 0) {
+			for (int i = 0; i < selectedIDs.size(); i++) {
+				
+				m_displayList[selectedIDs[i]].m_wireframe = true;
+			
+			}
+		}
+
 
 	}
 	else 
 	{
-		if (previousID >= 0)
-			m_displayList[previousID].m_wireframe = false;
 
-		if (selectedID >= 0)
-			m_displayList[selectedID].m_wireframe = false;
+		if (previousIDs.size() > 0) {
+			for (int i = 0; i < previousIDs.size(); i++) {
 
-		selectedID = -1;
+				m_displayList[previousIDs[i]].m_wireframe = false;
+
+			}
+		}
+
+		if (selectedIDs.size() > 0) {
+			for (int i = 0; i < selectedIDs.size(); i++) {
+
+				m_displayList[selectedIDs[i]].m_wireframe = false;
+
+			}
+		}
+		selectedIDs.clear();
 	}
 
-	return selectedID;
+	return selectedIDs;
 }
 
 #ifdef DXTK_AUDIO

@@ -7,6 +7,7 @@
 #include "SceneObject.h"
 #include "InputCommands.h"
 #include <vector>
+#include "DisplayObject.h"
 
 
 class ToolMain
@@ -29,11 +30,18 @@ public: //methods
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
 	ChunkObject					m_chunk;		//our landscape chunk
-	int m_selectedObject;						//ID of current Selection
+	
+	
+	int m_selectedObject;		//ID of current Selection
+	std::vector<int> m_selectedObjects;
+	
+
+	std::vector<DisplayObject>* getDisplayList() { return m_DisplayList; }
+	std::vector<int> getSelectedObjects() { return m_selectedObjects; }
 
 private:	//methods
 	void	onContentAdded();
-
+	std::vector<DisplayObject>* m_DisplayList;
 
 		
 private:	//variables

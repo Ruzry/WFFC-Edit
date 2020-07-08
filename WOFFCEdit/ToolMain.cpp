@@ -290,9 +290,13 @@ void ToolMain::Tick(MSG *msg)
 
 	if (m_toolInputCommands.mouseLeft) 
 	{
-		m_selectedObject = m_d3dRenderer.MousePicking();
+		m_selectedObjects = m_d3dRenderer.MousePicking(&m_toolInputCommands);
 		m_toolInputCommands.mouseLeft = false;
 	}
+
+	m_DisplayList = m_d3dRenderer.getDisplayList();
+
+	//TODO Update SceneGraph from DisplayList
 
 	//has something changed
 		//update Scenegraph
@@ -321,6 +325,16 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_mouseX = GET_X_LPARAM(msg->lParam);
 		
 		m_mouseY = GET_Y_LPARAM(msg->lParam);
+
+		
+		
+		if (GetCapture() == m_toolHandle) {
+			m_toolInputCommands.mainWindow = true;
+		}
+		else {
+			m_toolInputCommands.mainWindow = false;
+		}
+
 		break;
 
 	case WM_LBUTTONDOWN:	
@@ -386,6 +400,14 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.down = false;
 
+	if (m_keyArray['1'])
+	{
+		m_toolInputCommands.one = true;
+	}
+	else m_toolInputCommands.one = false;
+
+
+
 	//Vertical Movement
 	//if (m_keyArray[VK_SPACE]) 
 	//{
@@ -393,11 +415,12 @@ void ToolMain::UpdateInput(MSG * msg)
 	//}
 	//else m_toolInputCommands.up = false;
 
-	//if (m_keyArray[VK_CONTROL]) {
+	if (m_keyArray[VK_CONTROL]) {
 
-	//	m_toolInputCommands.down = true;
-	//}
-	//else m_toolInputCommands.down = false;
+		m_toolInputCommands.leftCtrl = true;
+	}
+	else 
+		m_toolInputCommands.leftCtrl = false;
 
 	if (m_keyArray[VK_LMENU]) {
 	

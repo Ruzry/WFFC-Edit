@@ -19,4 +19,9 @@ struct InputCommands
 	bool mouseRight;
 
 	bool leftAlt;
+	bool leftCtrl;
+	
+	bool one;
+
+	bool mainWindow;
 };

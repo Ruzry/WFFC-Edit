@@ -40,6 +40,12 @@ BOOL MFCMain::InitInstance()
 
 	m_ToolSystem.onActionInitialise(m_toolHandle, m_width, m_height);
 
+	m_InspectorDialogue.Create(IDD_DIALOG2);	//Start up modeless
+	m_InspectorDialogue.initializeConnection(&m_ToolSystem);
+	m_InspectorDialogue.ShowWindow(SW_SHOW);	//show modeless
+
+	
+
 	return TRUE;
 }
 
@@ -73,7 +79,9 @@ int MFCMain::Run()
 			int ID = m_ToolSystem.getCurrentSelectionID();
 			std::wstring statusString = L"Selected Object: " + std::to_wstring(ID);
 			m_ToolSystem.Tick(&msg);
-
+			
+			m_InspectorDialogue.update(m_ToolSystem.getDisplayList(), m_ToolSystem.getSelectedObjects());
+			
 			//send current object ID to status bar in The main frame
 			m_frame->m_wndStatusBar.SetPaneText(1, statusString.c_str(), 1);	
 		}
