@@ -10,6 +10,7 @@
 #include "MFCFrame.h"
 #include "SelectDialogue.h"
 #include "InspectorDialogue.h"
+#include "SceneObject.h"
 
 
 class MFCMain : public CWinApp 
@@ -39,6 +40,7 @@ private:
 	afx_msg void MenuEditSelect();
 
 	afx_msg void MenuFileTest();
+	afx_msg void MenuFileSaveObjects();
 
 	afx_msg	void ToolBarButton1();
 

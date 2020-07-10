@@ -15,12 +15,15 @@ public:
 	SelectDialogue(CWnd* pParent, std::vector<SceneObject>* SceneGraph);   // modal // takes in out scenegraph in the constructor
 	SelectDialogue(CWnd* pParent = NULL);
 	virtual ~SelectDialogue();
-	void SetObjectData(std::vector<SceneObject>* SceneGraph, int * Selection);	//passing in pointers to the data the class will operate on.
+	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int> * Selection, bool* selected);	//passing in pointers to the data the class will operate on.
 	
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DIALOG1 };
 #endif
+
+private:
+	bool* m_selected;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -28,7 +31,7 @@ protected:
 	afx_msg void Select();	//Item has been selected
 
 	std::vector<SceneObject> * m_sceneGraph;
-	int * m_currentSelection;
+	std::vector<int>* m_currentSelections;
 	
 
 	DECLARE_MESSAGE_MAP()
@@ -39,6 +42,8 @@ public:
 	virtual void PostNcDestroy();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnLbnSelchangeList1();
+
+	CButton m_OkButton;
 };
 
 

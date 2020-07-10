@@ -21,6 +21,8 @@ ToolMain::ToolMain()
 	m_toolInputCommands.right		= false;
 
 	mouse_LB_Down = false;
+
+	m_selectedObjects = new std::vector<int>;
 	
 }
 
@@ -46,6 +48,8 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	SetCursorPos(m_width / 2, (m_height / 2) + 150);
 	
 	m_d3dRenderer.Initialize(handle, m_width, m_height);
+	m_selectedObjects = m_d3dRenderer.getSelectedIDs();
+	m_selected = m_d3dRenderer.getSelected();
 
 	//database connection establish
 	int rc;
@@ -291,11 +295,16 @@ void ToolMain::Tick(MSG *msg)
 
 	if (m_toolInputCommands.mouseLeft) 
 	{
-		m_selectedObjects = m_d3dRenderer.MousePicking(&m_toolInputCommands);
+		m_d3dRenderer.MousePicking(&m_toolInputCommands);
 		m_toolInputCommands.mouseLeft = false;
 	}
 
-	m_selectedObjects = m_d3dRenderer.getSelectedIDs();
+	int size = m_selectedObjects->size();
+	m_camX = m_d3dRenderer.getCameraPosition().x;
+	m_camY = m_d3dRenderer.getCameraPosition().y;
+	m_camZ = m_d3dRenderer.getCameraPosition().z;
+
+	//m_selectedObjects = &m_d3dRenderer.getSelectedIDs();
 	m_DisplayList = m_d3dRenderer.getDisplayList();
 
 	//TODO Update SceneGraph from DisplayList
@@ -447,6 +456,19 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.speedUp = true;
 	}
 	else m_toolInputCommands.speedUp = false;
+}
+
+bool ToolMain::addToSceneGraph(SceneObject newSceneObject)
+{
+
+	//Add to Scenegraph 
+	newSceneObject.ID = m_sceneGraph.size();
+	newSceneObject.chunk_ID = 0;
+	m_sceneGraph.push_back(newSceneObject);
+	m_d3dRenderer.updateDisplayList(newSceneObject);
+
+
+	return true;
 }
 
 void ToolMain::updateSceneGraph()

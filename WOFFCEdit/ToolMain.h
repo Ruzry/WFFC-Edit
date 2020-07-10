@@ -33,11 +33,15 @@ public:	//variables
 	
 	
 	int m_selectedObject;		//ID of current Selection
-	std::vector<int> m_selectedObjects;
+	std::vector<int>* m_selectedObjects;
 	
+	float m_camX, m_camY, m_camZ;
 
 	std::vector<DisplayObject>* getDisplayList() { return m_DisplayList; }
-	std::vector<int> getSelectedObjects() { return m_selectedObjects; }
+	std::vector<int>* getSelectedObjects() { return m_selectedObjects; }
+	bool* getSelected() { return m_selected; }
+
+	bool addToSceneGraph(SceneObject newSceneObject);
 
 private:	//methods
 	void	onContentAdded();
@@ -58,4 +62,7 @@ private:	//variables
 	
 	float m_mouseX, m_mouseY;
 	bool mouse_LB_Down;
+
+
+	bool* m_selected;
 };

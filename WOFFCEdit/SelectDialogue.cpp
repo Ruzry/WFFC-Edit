@@ -32,10 +32,13 @@ SelectDialogue::~SelectDialogue()
 }
 
 ///pass through pointers to the data in the tool we want to manipulate
-void SelectDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, int * selection)
+void SelectDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int> * selection, bool* selected)
 {
 	m_sceneGraph = SceneGraph;
-	m_currentSelection = selection;
+	m_currentSelections = selection;
+	m_selected = selected;
+
+	
 
 	//roll through all the objects in the scene graph and put an entry for each in the listbox
 	int numSceneObjects = m_sceneGraph->size();
@@ -52,6 +55,7 @@ void SelectDialogue::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_listBox);
+	DDX_Control(pDX, IDOK, m_OkButton);
 }
 
 void SelectDialogue::End()
@@ -66,8 +70,11 @@ void SelectDialogue::Select()
 	
 	m_listBox.GetText(index, currentSelectionValue);
 
-	*m_currentSelection = _ttoi(currentSelectionValue);
 
+	m_currentSelections->clear();
+	m_currentSelections->push_back(_ttoi(currentSelectionValue));
+
+	*m_selected = true;
 }
 
 BOOL SelectDialogue::OnInitDialog()
@@ -90,6 +97,15 @@ BOOL SelectDialogue::OnInitDialog()
 
 void SelectDialogue::PostNcDestroy()
 {
+
+	m_sceneGraph = NULL;
+	delete m_sceneGraph;
+
+	m_currentSelections = NULL;
+	delete m_currentSelections;
+
+	m_selected = NULL;
+	delete m_selected;
 }
 
 
@@ -124,6 +140,11 @@ void SelectDialogue::PostNcDestroy()
 void SelectDialogue::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
+	
+
+
 	CDialogEx::OnOK();
+
+	
 }
 

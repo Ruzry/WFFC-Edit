@@ -50,9 +50,10 @@ public:
 	void BuildDisplayChunk(ChunkObject *SceneChunk);
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
+	void updateDisplayList(SceneObject newSceneObject);
 
 	//Added Functionality
-	std::vector<int> MousePicking(InputCommands* input);
+	void MousePicking(InputCommands* input);
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
@@ -60,12 +61,14 @@ public:
 
 
 	std::vector<DisplayObject>* getDisplayList() { return &m_displayList; }
-	std::vector<int> getSelectedIDs() { return selectedIDs; }
+	std::vector<int>* getSelectedIDs() { return &selectedIDs; }
+	bool* getSelected() { return &selected; }
+	DirectX::SimpleMath::Vector3 getCameraPosition() { return m_camPosition; }
 
 private:
 
 	void Update(DX::StepTimer const& timer);
-
+	void updateSelection();
 	void CreateDeviceDependentResources();
 	void CreateWindowSizeDependentResources();
 
@@ -136,7 +139,7 @@ private:
     DirectX::SimpleMath::Matrix                                             m_view;
     DirectX::SimpleMath::Matrix                                             m_projection;
 
-
+	DirectX::SimpleMath::Vector3											m_camPosition;
 };
 
 std::wstring StringToWCHART(std::string s);

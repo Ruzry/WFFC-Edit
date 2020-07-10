@@ -8,6 +8,7 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	/*ON_COMMAND(ID_FILE_TEST, &MFCMain::MenuFileTest)*/
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
+	ON_COMMAND(ID_FILE_SAVEOBJECTS, &MFCMain::MenuFileSaveObjects)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
 
@@ -77,7 +78,9 @@ int MFCMain::Run()
 		else
 		{	
 			int ID = m_ToolSystem.getCurrentSelectionID();
-			std::wstring statusString = L"Selected Object: " + std::to_wstring(ID);
+			std::wstring statusString = L"Camera Position: X: " + std::to_wstring(m_ToolSystem.m_camX) + L" Y: " 
+															+ std::to_wstring(m_ToolSystem.m_camY) + L" Z: "
+															+ std::to_wstring(m_ToolSystem.m_camZ);
 			m_ToolSystem.Tick(&msg);
 			
 			m_InspectorDialogue.update(m_ToolSystem.getDisplayList(), m_ToolSystem.getSelectedObjects());
@@ -109,18 +112,86 @@ void MFCMain::MenuEditSelect()
 	//modeless dialogue must be declared in the class.   If we do local it will go out of scope instantly and destroy itself
 	m_ToolSelectDialogue.Create(IDD_DIALOG1);	//Start up modeless
 	m_ToolSelectDialogue.ShowWindow(SW_SHOW);	//show modeless
-	m_ToolSelectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject);
+	m_ToolSelectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, m_ToolSystem.m_selectedObjects, m_ToolSystem.getSelected());
 }
 
 void MFCMain::MenuFileTest()
 {
 }
 
-void MFCMain::ToolBarButton1()
+void MFCMain::MenuFileSaveObjects()
 {
-	//Reset Inspector position values as save move them to the actual value rather than just an offset
+	//Reset Inspector position values as save move them to the actual value rather than just an offset;
 	m_InspectorDialogue.resetSliders();
 	m_ToolSystem.onActionSave();
+}
+
+void MFCMain::ToolBarButton1()
+{
+	SceneObject newSceneObject;
+
+	newSceneObject.model_path = "database/data/placeholder.cmo";
+	newSceneObject.tex_diffuse_path = "database/data/placeholder.dds";
+
+	newSceneObject.posX = 0.0f;
+	newSceneObject.posY = 0.0f;
+	newSceneObject.posZ = 0.0f;
+
+	newSceneObject.rotX = 0.0f;
+	newSceneObject.rotY = 0.0f;
+	newSceneObject.rotZ = 0.0f;
+
+	newSceneObject.scaX = 1.0f;
+	newSceneObject.scaY = 1.0f;
+	newSceneObject.scaZ = 1.0f;
+
+	newSceneObject.render = true;
+	newSceneObject.collision = true;
+	newSceneObject.collision_mesh = "";
+	newSceneObject.collectable = false;
+	newSceneObject.destructable = false;
+	newSceneObject.health_amount = 0;
+	newSceneObject.editor_render = true;
+	newSceneObject.editor_texture_vis = false;
+	newSceneObject.editor_normals_vis = false;
+	newSceneObject.editor_collision_vis = false;
+	newSceneObject.editor_pivot_vis = false;
+	newSceneObject.pivotX = 0;
+	newSceneObject.pivotY = 0;
+	newSceneObject.pivotZ = 0;
+	newSceneObject.snapToGround = false;
+	newSceneObject.AINode = false;
+	newSceneObject.audio_path = "";
+	newSceneObject.volume = 100.0f;
+	newSceneObject.pitch = 0.0f;
+	newSceneObject.pan = 0.0f;
+	newSceneObject.one_shot = false;
+	newSceneObject.play_on_init = false;
+	newSceneObject.play_in_editor = false;
+	newSceneObject.min_dist = 100.f;
+	newSceneObject.max_dist = 0.0f;
+	newSceneObject.camera = false;
+	newSceneObject.path_node = false;
+	newSceneObject.path_node_start = false;
+	newSceneObject.path_node_end = false;
+	newSceneObject.parent_id = -1;
+	newSceneObject.editor_wireframe = false;
+	newSceneObject.name = "";
+
+	newSceneObject.light_type = 0;
+	newSceneObject.light_diffuse_r = 0.0f;
+	newSceneObject.light_diffuse_g = 0.0f;
+	newSceneObject.light_diffuse_b = 0.0f;
+	newSceneObject.light_specular_r = 0.0f;
+	newSceneObject.light_specular_g = 0.0f;
+	newSceneObject.light_specular_b = 0.0f;
+	newSceneObject.light_spot_cutoff = 0.0f;
+	newSceneObject.light_constant = 0.0f;
+	newSceneObject.light_linear = 0.0f;
+	newSceneObject.light_quadratic = 0.0f;
+
+	m_ToolSystem.addToSceneGraph(newSceneObject);
+
 }
 
 

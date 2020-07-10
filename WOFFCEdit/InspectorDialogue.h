@@ -21,7 +21,7 @@ public:
 #endif
 
 	void initializeConnection(ToolMain* toolSystem);
-	void update(std::vector<DisplayObject>* display_List, std::vector<int> selectedObjects);
+	void update(std::vector<DisplayObject>* display_List, std::vector<int>* selectedObjects);
 	void updateSelectionEditText();
 	void updateTransformEditText();
 	void resetSliders();
@@ -31,7 +31,7 @@ private:
 	ToolMain* m_Tool_System;
 
 	std::vector<DisplayObject>* m_Display_List;
-	std::vector<int> m_selectedObjects;
+	std::vector<int>* m_selectedObjects;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

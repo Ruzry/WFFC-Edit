@@ -110,28 +110,29 @@ void Game::Tick(InputCommands *Input)
 	//copy over the input commands so we have a local version to use elsewhere.
 	m_InputCommands = *Input;
 
-	if (m_InputCommands.unselect == true) {
-		selected = false;
+	//if (m_InputCommands.unselect == true) {
+	//	selected = false;
 
-		if (previousIDs.size() > 0) {
-			for (int i = 0; i < previousIDs.size(); i++) {
+	//	if (previousIDs.size() > 0) {
+	//		for (int i = 0; i < previousIDs.size(); i++) {
 
-				m_displayList[previousIDs[i]].m_wireframe = false;
+	//			m_displayList[previousIDs[i]].m_wireframe = false;
 
-			}
-		}
+	//		}
+	//	}
 
-		if (selectedIDs.size() > 0) {
-			for (int i = 0; i < selectedIDs.size(); i++) {
+	//	if (selectedIDs.size() > 0) {
+	//		for (int i = 0; i < selectedIDs.size(); i++) {
 
-				m_displayList[selectedIDs[i]].m_wireframe = false;
+	//			m_displayList[selectedIDs[i]].m_wireframe = false;
 
-			}
-		}
+	//		}
+	//	}
 
-		selectedIDs.clear();
+	//	selectedIDs.clear();
 
-	}
+	//}
+	updateSelection();
 
     m_timer.Tick([&]()
     {
@@ -159,7 +160,7 @@ void Game::Update(DX::StepTimer const& timer)
 	planarMotionVector.y = 0.0;
 
 	camera.update(&m_InputCommands, m_movespeed);
-
+	m_camPosition = camera.getCamPosition();
 
 	m_view = Matrix::CreateLookAt(camera.getCamPosition(), camera.getCamLookAt(), -camera.getCamUp());
 
@@ -195,6 +196,54 @@ void Game::Update(DX::StepTimer const& timer)
 
    
 }
+void Game::updateSelection()
+{
+	if (selected) {
+
+		if (previousIDs.size() > 0) {
+			for (int i = 0; i < previousIDs.size(); i++) {
+
+				m_displayList[previousIDs[i]].m_wireframe = false;
+
+			}
+		}
+
+
+		if (selectedIDs.size() > 0) {
+			for (int i = 0; i < selectedIDs.size(); i++) {
+
+				m_displayList[selectedIDs[i]].m_wireframe = true;
+
+			}
+		}
+
+
+	}
+
+	if (m_InputCommands.unselect == true) {
+		selected = false;
+
+		if (previousIDs.size() > 0) {
+			for (int i = 0; i < previousIDs.size(); i++) {
+
+				m_displayList[previousIDs[i]].m_wireframe = false;
+
+			}
+		}
+
+		if (selectedIDs.size() > 0) {
+			for (int i = 0; i < selectedIDs.size(); i++) {
+
+				m_displayList[selectedIDs[i]].m_wireframe = false;
+
+			}
+		}
+
+		selectedIDs.clear();
+
+	}
+
+}
 #pragma endregion
 
 #pragma region Frame Render
@@ -222,11 +271,11 @@ void Game::Render()
 		DrawGrid(xaxis, yaxis, g_XMZero, 512, 512, Colors::Gray);
 	}
 	//CAMERA POSITION ON HUD
-	m_sprites->Begin();
-	WCHAR   Buffer[256];
-	std::wstring var = L"Cam X: " + std::to_wstring(camera.getCamPosition().x) + L" Cam Y: " + std::to_wstring(camera.getCamPosition().y) + L" Cam Z: " + std::to_wstring(camera.getCamPosition().z);
-	m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
-	m_sprites->End();
+	//m_sprites->Begin();
+	//WCHAR   Buffer[256];
+	//std::wstring var = L"Cam X: " + std::to_wstring(camera.getCamPosition().x) + L" Cam Y: " + std::to_wstring(camera.getCamPosition().y) + L" Cam Z: " + std::to_wstring(camera.getCamPosition().z);
+	//m_font->DrawString(m_sprites.get(), var.c_str() , XMFLOAT2(100, 10), Colors::Yellow);
+	//m_sprites->End();
 
 	//RENDER OBJECTS FROM SCENEGRAPH
 	int numRenderObjects = m_displayList.size();
@@ -477,7 +526,87 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
 }
 
-std::vector<int> Game::MousePicking(InputCommands* input)
+void Game::updateDisplayList(SceneObject newSceneObject)
+{
+	auto device = m_deviceResources->GetD3DDevice();
+	auto devicecontext = m_deviceResources->GetD3DDeviceContext();
+
+	//create a temp display object that we will populate then append to the display list.
+	DisplayObject newDisplayObject;
+
+	//load model
+	std::wstring modelwstr = StringToWCHART(newSceneObject.model_path);							//convect string to Wchar
+	newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+
+	//Load Texture
+	std::wstring texturewstr = StringToWCHART(newSceneObject.tex_diffuse_path);								//convect string to Wchar
+	HRESULT rs;
+	rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+
+	//if texture fails.  load error default
+	if (rs)
+	{
+		CreateDDSTextureFromFile(device, L"database/data/Error.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+	}
+
+	//apply new texture to models effect
+	newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+	{
+		auto lights = dynamic_cast<BasicEffect*>(effect);
+		if (lights)
+		{
+			lights->SetTexture(newDisplayObject.m_texture_diffuse);
+		}
+	});
+
+	//set position
+	newDisplayObject.m_position.x = newSceneObject.posX;
+	newDisplayObject.m_position.y = newSceneObject.posY;
+	newDisplayObject.m_position.z = newSceneObject.posZ;
+
+	//setorientation
+	newDisplayObject.m_orientation.x = newSceneObject.rotX;
+	newDisplayObject.m_orientation.y = newSceneObject.rotY;
+	newDisplayObject.m_orientation.z = newSceneObject.rotZ;
+
+	//set scale
+	newDisplayObject.m_scale.x = newSceneObject.scaX;
+	newDisplayObject.m_scale.y = newSceneObject.scaY;
+	newDisplayObject.m_scale.z = newSceneObject.scaZ;
+
+	//set wireframe / render flags
+	newDisplayObject.m_render = newSceneObject.editor_render;
+	newDisplayObject.m_wireframe = newSceneObject.editor_wireframe;
+
+	newDisplayObject.m_light_type = newSceneObject.light_type;
+	newDisplayObject.m_light_diffuse_r = newSceneObject.light_diffuse_r;
+	newDisplayObject.m_light_diffuse_g = newSceneObject.light_diffuse_g;
+	newDisplayObject.m_light_diffuse_b = newSceneObject.light_diffuse_b;
+	newDisplayObject.m_light_specular_r = newSceneObject.light_specular_r;
+	newDisplayObject.m_light_specular_g = newSceneObject.light_specular_g;
+	newDisplayObject.m_light_specular_b = newSceneObject.light_specular_b;
+	newDisplayObject.m_light_spot_cutoff = newSceneObject.light_spot_cutoff;
+	newDisplayObject.m_light_constant = newSceneObject.light_constant;
+	newDisplayObject.m_light_linear = newSceneObject.light_linear;
+	newDisplayObject.m_light_quadratic = newSceneObject.light_quadratic;
+
+	//Initialization of added values
+	newDisplayObject.m_X_Pos_Slider_Offset = 0.0f;
+	newDisplayObject.m_Y_Pos_Slider_Offset = 0.0f;
+	newDisplayObject.m_Z_Pos_Slider_Offset = 0.0f;
+
+	newDisplayObject.m_X_Rot_Slider_Offset = 0.0f;
+	newDisplayObject.m_Y_Rot_Slider_Offset = 0.0f;
+	newDisplayObject.m_Z_Rot_Slider_Offset = 0.0f;
+
+	newDisplayObject.m_X_Scale_Slider_Offset = 0.0f;
+	newDisplayObject.m_Y_Scale_Slider_Offset = 0.0f;
+	newDisplayObject.m_Z_Scale_Slider_Offset = 0.0f;
+
+	m_displayList.push_back(newDisplayObject);
+}
+
+void Game::MousePicking(InputCommands* input)
 {
 	float pickedDistance = 0;
 	float shortestDistance = 0.0f, currentDistance = 0.0f;
@@ -496,7 +625,7 @@ std::vector<int> Game::MousePicking(InputCommands* input)
 
 	//Loop through entire display list of of objects and pick with in each turn.
 	for (int i = 0; i < m_displayList.size(); i++) {
-	
+
 		//Get the scale factor and translation of the object
 		const XMVECTORF32 scale = { m_displayList[i].m_scale.x + m_displayList[i].m_X_Scale_Slider_Offset, m_displayList[i].m_scale.y + m_displayList[i].m_Y_Scale_Slider_Offset, m_displayList[i].m_scale.z + m_displayList[i].m_Z_Scale_Slider_Offset };
 		const XMVECTORF32 translate = { m_displayList[i].m_position.x + m_displayList[i].m_X_Pos_Slider_Offset, m_displayList[i].m_position.y + m_displayList[i].m_Y_Pos_Slider_Offset, m_displayList[i].m_position.z + m_displayList[i].m_Z_Pos_Slider_Offset };
@@ -508,11 +637,11 @@ std::vector<int> Game::MousePicking(InputCommands* input)
 
 		//create set the matrix of the selected object in the world based on the translation, scale and rotation.
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
-	
+
 		//Unproject the points on the near and far plane, with respect to the matrix we just created.
 		XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_screenDimensions.right, m_screenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
 		XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_screenDimensions.right, m_screenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
-	
+
 		//turn the transformed points into our picking vector.
 		XMVECTOR pickingVector = farPoint - nearPoint;
 		pickingVector = XMVector3Normalize(pickingVector);
@@ -537,11 +666,11 @@ std::vector<int> Game::MousePicking(InputCommands* input)
 
 						//If Selected IDs contains it already, then remove it instead
 						for (int j = 0; j < selectedIDs.size(); j++) {
-							
+
 							if (selectedIDs[j] == i) {
 								selectedIDs.erase(selectedIDs.begin() + j);
 								removed = true;
-							
+
 							}
 						}
 
@@ -558,65 +687,13 @@ std::vector<int> Game::MousePicking(InputCommands* input)
 
 					}
 					selectedID = i;
-
 					shortestDistance = pickedDistance;
-
 					selected = true;
 
-				}	
+				}
 			}
 		}
-
-
 	}
-
-	//if (input->mainWindow == false)
-	//	selected = true;
-
-
-	if (selected) {
-
-		if (previousIDs.size() > 0) {
-			for (int i = 0; i < previousIDs.size(); i++) {
-
-				m_displayList[previousIDs[i]].m_wireframe = false;
-
-			}
-		}
-
-
-		if (selectedIDs.size() > 0) {
-			for (int i = 0; i < selectedIDs.size(); i++) {
-				
-				m_displayList[selectedIDs[i]].m_wireframe = true;
-			
-			}
-		}
-
-
-	}
-	else 
-	{
-
-		//if (previousIDs.size() > 0) {
-		//	for (int i = 0; i < previousIDs.size(); i++) {
-
-		//		m_displayList[previousIDs[i]].m_wireframe = false;
-
-		//	}
-		//}
-
-		//if (selectedIDs.size() > 0) {
-		//	for (int i = 0; i < selectedIDs.size(); i++) {
-
-		//		m_displayList[selectedIDs[i]].m_wireframe = false;
-
-		//	}
-		//}
-		//selectedIDs.clear();
-	}
-
-	return selectedIDs;
 }
 
 #ifdef DXTK_AUDIO
