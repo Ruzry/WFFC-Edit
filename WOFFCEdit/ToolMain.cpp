@@ -196,6 +196,7 @@ void ToolMain::onActionSave()
 	char *ErrMSG = 0;
 	sqlite3_stmt *pResults;								//results of the query
 	
+	updateSceneGraph();
 
 	//OBJECTS IN THE WORLD Delete them all
 	//prepare SQL Text
@@ -294,6 +295,7 @@ void ToolMain::Tick(MSG *msg)
 		m_toolInputCommands.mouseLeft = false;
 	}
 
+	m_selectedObjects = m_d3dRenderer.getSelectedIDs();
 	m_DisplayList = m_d3dRenderer.getDisplayList();
 
 	//TODO Update SceneGraph from DisplayList
@@ -406,7 +408,17 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.one = false;
 
+	if (m_keyArray[VK_ESCAPE])
+	{
+		m_toolInputCommands.escape = true;
+	}
+	else m_toolInputCommands.escape = false;
 
+	if (m_keyArray['C']) 
+	{
+		m_toolInputCommands.unselect = true;
+	}
+	else m_toolInputCommands.unselect = false;
 
 	//Vertical Movement
 	//if (m_keyArray[VK_SPACE]) 
@@ -435,4 +447,69 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.speedUp = true;
 	}
 	else m_toolInputCommands.speedUp = false;
+}
+
+void ToolMain::updateSceneGraph()
+{
+	for (int i = 0; i < m_sceneGraph.size(); i++) {
+	
+		//Consoldate position values in respect to the offsets and reset the offset
+		m_DisplayList->at(i).m_position.x += m_DisplayList->at(i).m_X_Pos_Slider_Offset;
+		m_DisplayList->at(i).m_position.y += m_DisplayList->at(i).m_Y_Pos_Slider_Offset;
+		m_DisplayList->at(i).m_position.z += m_DisplayList->at(i).m_Z_Pos_Slider_Offset;
+
+		m_DisplayList->at(i).m_X_Pos_Slider_Offset = 0;
+		m_DisplayList->at(i).m_Y_Pos_Slider_Offset = 0;
+		m_DisplayList->at(i).m_Z_Pos_Slider_Offset = 0;
+
+		m_DisplayList->at(i).m_scale.x += m_DisplayList->at(i).m_X_Scale_Slider_Offset;
+		m_DisplayList->at(i).m_scale.y += m_DisplayList->at(i).m_Y_Scale_Slider_Offset;
+		m_DisplayList->at(i).m_scale.z += m_DisplayList->at(i).m_Z_Scale_Slider_Offset;
+
+		m_DisplayList->at(i).m_X_Scale_Slider_Offset = 0;
+		m_DisplayList->at(i).m_Y_Scale_Slider_Offset = 0;
+		m_DisplayList->at(i).m_Z_Scale_Slider_Offset = 0;
+
+		m_DisplayList->at(i).m_orientation.x += m_DisplayList->at(i).m_X_Pos_Slider_Offset;
+		m_DisplayList->at(i).m_orientation.y += m_DisplayList->at(i).m_Y_Pos_Slider_Offset;
+		m_DisplayList->at(i).m_orientation.z += m_DisplayList->at(i).m_Z_Pos_Slider_Offset;
+
+		m_DisplayList->at(i).m_X_Rot_Slider_Offset = 0;
+		m_DisplayList->at(i).m_Y_Rot_Slider_Offset = 0;
+		m_DisplayList->at(i).m_Z_Rot_Slider_Offset = 0;
+
+		//Position
+		m_sceneGraph[i].posX = m_DisplayList->at(i).m_position.x;
+		m_sceneGraph[i].posY = m_DisplayList->at(i).m_position.y;
+		m_sceneGraph[i].posZ = m_DisplayList->at(i).m_position.z;
+	
+		//Orientation
+		m_sceneGraph[i].rotX = m_DisplayList->at(i).m_orientation.x;
+		m_sceneGraph[i].rotY = m_DisplayList->at(i).m_orientation.y;
+		m_sceneGraph[i].rotZ = m_DisplayList->at(i).m_orientation.z;
+
+		//Scale
+		m_sceneGraph[i].scaX = m_DisplayList->at(i).m_scale.x;
+		m_sceneGraph[i].scaY = m_DisplayList->at(i).m_scale.y;
+		m_sceneGraph[i].scaZ = m_DisplayList->at(i).m_scale.z;
+
+		//Lighting
+		m_sceneGraph[i].light_type = m_DisplayList->at(i).m_light_type;
+
+		m_sceneGraph[i].light_diffuse_r = m_DisplayList->at(i).m_light_diffuse_r;
+		m_sceneGraph[i].light_diffuse_g = m_DisplayList->at(i).m_light_diffuse_g;
+		m_sceneGraph[i].light_diffuse_b = m_DisplayList->at(i).m_light_diffuse_b;
+
+		m_sceneGraph[i].light_specular_r = m_DisplayList->at(i).m_light_specular_r;
+		m_sceneGraph[i].light_specular_g = m_DisplayList->at(i).m_light_specular_g;
+		m_sceneGraph[i].light_specular_b = m_DisplayList->at(i).m_light_specular_b;
+
+		m_sceneGraph[i].light_spot_cutoff = m_DisplayList->at(i).m_light_spot_cutoff;
+		m_sceneGraph[i].light_constant = m_DisplayList->at(i).m_light_constant;
+		m_sceneGraph[i].light_linear = m_DisplayList->at(i).m_light_linear;
+		m_sceneGraph[i].light_quadratic = m_DisplayList->at(i).m_light_quadratic;
+
+
+
+	}
 }

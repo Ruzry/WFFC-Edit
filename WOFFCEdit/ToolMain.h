@@ -42,7 +42,7 @@ public:	//variables
 private:	//methods
 	void	onContentAdded();
 	std::vector<DisplayObject>* m_DisplayList;
-
+	void updateSceneGraph();
 		
 private:	//variables
 	HWND	m_toolHandle;		//Handle to the  window

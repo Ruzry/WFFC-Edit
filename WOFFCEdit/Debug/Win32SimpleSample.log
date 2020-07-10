@@ -1,4 +1,32 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Win32SimpleSample.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  InspectorDialogue.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\camera.h(37): warning C4305: 'initializing': truncation from 'double' to 'const float'
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(43): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(45): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(53): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(92): warning C4018: '<': signed/unsigned mismatch
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(302): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(318): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(333): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(348): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(363): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(377): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(391): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(405): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(419): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  MFCMain.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\camera.h(37): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  Main.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\camera.h(37): warning C4305: 'initializing': truncation from 'double' to 'const float'
   ToolMain.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
 d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\camera.h(37): warning C4305: 'initializing': truncation from 'double' to 'const float'
@@ -29,6 +57,8 @@ d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(145): 
 d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(146): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(147): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(148): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(325): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(327): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(329): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\toolmain.cpp(454): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   Win32SimpleSample.vcxproj -> D:\Ruaraidh\Documents\Programming\Github\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe

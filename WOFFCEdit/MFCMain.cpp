@@ -118,7 +118,8 @@ void MFCMain::MenuFileTest()
 
 void MFCMain::ToolBarButton1()
 {
-	
+	//Reset Inspector position values as save move them to the actual value rather than just an offset
+	m_InspectorDialogue.resetSliders();
 	m_ToolSystem.onActionSave();
 }
 

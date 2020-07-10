@@ -26,5 +26,11 @@ public:
 	float	m_light_constant;
 	float	m_light_linear;
 	float	m_light_quadratic;
+
+
+
+	float m_X_Pos_Slider_Offset, m_Y_Pos_Slider_Offset, m_Z_Pos_Slider_Offset;
+	float m_X_Rot_Slider_Offset, m_Y_Rot_Slider_Offset, m_Z_Rot_Slider_Offset;
+	float m_X_Scale_Slider_Offset, m_Y_Scale_Slider_Offset, m_Z_Scale_Slider_Offset;
 };
 

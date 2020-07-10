@@ -109,6 +109,30 @@ void Game::Tick(InputCommands *Input)
 {
 	//copy over the input commands so we have a local version to use elsewhere.
 	m_InputCommands = *Input;
+
+	if (m_InputCommands.unselect == true) {
+		selected = false;
+
+		if (previousIDs.size() > 0) {
+			for (int i = 0; i < previousIDs.size(); i++) {
+
+				m_displayList[previousIDs[i]].m_wireframe = false;
+
+			}
+		}
+
+		if (selectedIDs.size() > 0) {
+			for (int i = 0; i < selectedIDs.size(); i++) {
+
+				m_displayList[selectedIDs[i]].m_wireframe = false;
+
+			}
+		}
+
+		selectedIDs.clear();
+
+	}
+
     m_timer.Tick([&]()
     {
         Update(m_timer);
@@ -130,25 +154,12 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-	//TODO  any more complex than this, and the camera should be abstracted out to somewhere else
-	//camera motion is on a plane, so kill the 7 component of the look direction
 
 	Vector3 planarMotionVector = camera.getLookDirection();
 	planarMotionVector.y = 0.0;
 
 	camera.update(&m_InputCommands, m_movespeed);
 
-	//int k = 0;
-
-	//if (m_InputCommands.showCursor)
-	//{
-	//	if (GetCursorInfo < 0) {
-	//		k = ShowCursor(true);
-	//	}
-	//}
-	//else  if (GetCursorInfo >= 0) {
-	//	ShowCursor(false);
-	//}
 
 	m_view = Matrix::CreateLookAt(camera.getCamPosition(), camera.getCamLookAt(), -camera.getCamUp());
 
@@ -222,13 +233,13 @@ void Game::Render()
 	for (int i = 0; i < numRenderObjects; i++)
 	{
 		m_deviceResources->PIXBeginEvent(L"Draw model");
-		const XMVECTORF32 scale = { m_displayList[i].m_scale.x, m_displayList[i].m_scale.y, m_displayList[i].m_scale.z };
-		const XMVECTORF32 translate = { m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z };
+		const XMVECTORF32 scale = { m_displayList[i].m_scale.x + m_displayList[i].m_X_Scale_Slider_Offset, m_displayList[i].m_scale.y + m_displayList[i].m_Y_Scale_Slider_Offset, m_displayList[i].m_scale.z + m_displayList[i].m_Z_Scale_Slider_Offset };
+		const XMVECTORF32 translate = { (m_displayList[i].m_position.x + m_displayList[i].m_X_Pos_Slider_Offset), m_displayList[i].m_position.y + m_displayList[i].m_Y_Pos_Slider_Offset, m_displayList[i].m_position.z + m_displayList[i].m_Z_Pos_Slider_Offset };
 
 		//convert degrees into radians for rotation matrix
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y *3.1415 / 180,
-															m_displayList[i].m_orientation.x *3.1415 / 180,
-															m_displayList[i].m_orientation.z *3.1415 / 180);
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll((m_displayList[i].m_orientation.y + m_displayList[i].m_Y_Rot_Slider_Offset) *3.1415 / 180,
+															(m_displayList[i].m_orientation.x + m_displayList[i].m_X_Rot_Slider_Offset) *3.1415 / 180,
+															(m_displayList[i].m_orientation.z + m_displayList[i].m_Z_Rot_Slider_Offset) *3.1415 / 180);
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
@@ -426,7 +437,23 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_light_constant	= SceneGraph->at(i).light_constant;
 		newDisplayObject.m_light_linear		= SceneGraph->at(i).light_linear;
 		newDisplayObject.m_light_quadratic	= SceneGraph->at(i).light_quadratic;
-		
+
+		//Initialization of added values
+		newDisplayObject.m_X_Pos_Slider_Offset = 0.0f;
+		newDisplayObject.m_Y_Pos_Slider_Offset = 0.0f;
+		newDisplayObject.m_Z_Pos_Slider_Offset = 0.0f;
+
+		newDisplayObject.m_X_Rot_Slider_Offset = 0.0f;
+		newDisplayObject.m_Y_Rot_Slider_Offset = 0.0f;
+		newDisplayObject.m_Z_Rot_Slider_Offset = 0.0f;
+
+		newDisplayObject.m_X_Scale_Slider_Offset = 0.0f;
+		newDisplayObject.m_Y_Scale_Slider_Offset = 0.0f;
+		newDisplayObject.m_Z_Scale_Slider_Offset = 0.0f;
+
+
+
+
 		m_displayList.push_back(newDisplayObject);
 		
 	}
@@ -465,19 +492,19 @@ std::vector<int> Game::MousePicking(InputCommands* input)
 
 	previousIDs = selectedIDs;
 
-	selected = false;
+	//selected = false;
 
 	//Loop through entire display list of of objects and pick with in each turn.
 	for (int i = 0; i < m_displayList.size(); i++) {
 	
 		//Get the scale factor and translation of the object
-		const XMVECTORF32 scale = { m_displayList[i].m_scale.x, m_displayList[i].m_scale.y, m_displayList[i].m_scale.z };
-		const XMVECTORF32 translate = { m_displayList[i].m_position.x, m_displayList[i].m_position.y, m_displayList[i].m_position.z };
+		const XMVECTORF32 scale = { m_displayList[i].m_scale.x + m_displayList[i].m_X_Scale_Slider_Offset, m_displayList[i].m_scale.y + m_displayList[i].m_Y_Scale_Slider_Offset, m_displayList[i].m_scale.z + m_displayList[i].m_Z_Scale_Slider_Offset };
+		const XMVECTORF32 translate = { m_displayList[i].m_position.x + m_displayList[i].m_X_Pos_Slider_Offset, m_displayList[i].m_position.y + m_displayList[i].m_Y_Pos_Slider_Offset, m_displayList[i].m_position.z + m_displayList[i].m_Z_Pos_Slider_Offset };
 
 		//Convert euler angles into a quaternion for the rotation of the object.
-		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(m_displayList[i].m_orientation.y * 3.1415 / 180,
-			m_displayList[i].m_orientation.x * 3.1415 / 180,
-			m_displayList[i].m_orientation.z * 3.1415 / 180);
+		XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll((m_displayList[i].m_orientation.y + m_displayList[i].m_Y_Rot_Slider_Offset) * 3.1415 / 180,
+			(m_displayList[i].m_orientation.x + m_displayList[i].m_X_Rot_Slider_Offset) * 3.1415 / 180,
+			(m_displayList[i].m_orientation.z + m_displayList[i].m_Z_Rot_Slider_Offset) * 3.1415 / 180);
 
 		//create set the matrix of the selected object in the world based on the translation, scale and rotation.
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
@@ -543,8 +570,9 @@ std::vector<int> Game::MousePicking(InputCommands* input)
 
 	}
 
-	if (input->mainWindow == false)
-		selected = true;
+	//if (input->mainWindow == false)
+	//	selected = true;
+
 
 	if (selected) {
 
@@ -570,22 +598,22 @@ std::vector<int> Game::MousePicking(InputCommands* input)
 	else 
 	{
 
-		if (previousIDs.size() > 0) {
-			for (int i = 0; i < previousIDs.size(); i++) {
+		//if (previousIDs.size() > 0) {
+		//	for (int i = 0; i < previousIDs.size(); i++) {
 
-				m_displayList[previousIDs[i]].m_wireframe = false;
+		//		m_displayList[previousIDs[i]].m_wireframe = false;
 
-			}
-		}
+		//	}
+		//}
 
-		if (selectedIDs.size() > 0) {
-			for (int i = 0; i < selectedIDs.size(); i++) {
+		//if (selectedIDs.size() > 0) {
+		//	for (int i = 0; i < selectedIDs.size(); i++) {
 
-				m_displayList[selectedIDs[i]].m_wireframe = false;
+		//		m_displayList[selectedIDs[i]].m_wireframe = false;
 
-			}
-		}
-		selectedIDs.clear();
+		//	}
+		//}
+		//selectedIDs.clear();
 	}
 
 	return selectedIDs;

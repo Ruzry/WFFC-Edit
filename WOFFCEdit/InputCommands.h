@@ -20,7 +20,10 @@ struct InputCommands
 
 	bool leftAlt;
 	bool leftCtrl;
-	
+	bool escape;
+
+	bool unselect;
+
 	bool one;
 
 	bool mainWindow;

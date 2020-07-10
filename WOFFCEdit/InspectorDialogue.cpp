@@ -35,6 +35,49 @@ void InspectorDialogue::update(std::vector<DisplayObject>* display_List, std::ve
 
 	updateTransformEditText();
 
+
+	if (m_selectedObjects.size() == 1) {
+		
+		slider_X_Pos.SetPos(m_Display_List->at(m_selectedObjects[0]).m_X_Pos_Slider_Offset);
+
+		slider_Y_Pos.SetPos(m_Display_List->at(m_selectedObjects[0]).m_Y_Pos_Slider_Offset);
+
+		slider_Z_Pos.SetPos(m_Display_List->at(m_selectedObjects[0]).m_Z_Pos_Slider_Offset);
+
+		slider_X_Rot.SetPos(m_Display_List->at(m_selectedObjects[0]).m_X_Rot_Slider_Offset);
+
+		slider_Y_Rot.SetPos(m_Display_List->at(m_selectedObjects[0]).m_Y_Rot_Slider_Offset);
+
+		slider_Z_Rot.SetPos(m_Display_List->at(m_selectedObjects[0]).m_Z_Rot_Slider_Offset);
+
+		slider_X_Scale.SetPos(m_Display_List->at(m_selectedObjects[0]).m_X_Scale_Slider_Offset);
+
+		slider_Y_Scale.SetPos(m_Display_List->at(m_selectedObjects[0]).m_Y_Scale_Slider_Offset);
+
+		slider_Z_Scale.SetPos(m_Display_List->at(m_selectedObjects[0]).m_Z_Scale_Slider_Offset);
+	
+	}
+	else {
+	
+		slider_X_Pos.SetPos(0);
+
+		slider_Y_Pos.SetPos(0);
+
+		slider_Z_Pos.SetPos(0);
+
+		slider_X_Rot.SetPos(0);
+
+		slider_Y_Rot.SetPos(0);
+
+		slider_Z_Rot.SetPos(0);
+
+		slider_X_Scale.SetPos(0);
+
+		slider_Y_Scale.SetPos(0);
+
+		slider_Z_Scale.SetPos(0);
+	
+	}
 }
 
 void InspectorDialogue::updateSelectionEditText()
@@ -80,31 +123,31 @@ void InspectorDialogue::updateTransformEditText()
 
 	if (m_selectedObjects.size() == 1) {
 	
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_position.x);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_position.x + m_Display_List->at(m_selectedObjects[0]).m_X_Pos_Slider_Offset);
 		posXString = tempString.c_str();
 	
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_position.y);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_position.y + m_Display_List->at(m_selectedObjects[0]).m_Y_Pos_Slider_Offset);
 		posYString = tempString.c_str();
 
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_position.z);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_position.z + m_Display_List->at(m_selectedObjects[0]).m_Z_Pos_Slider_Offset);
 		posZString = tempString.c_str();
 
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_orientation.x);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_orientation.x + m_Display_List->at(m_selectedObjects[0]).m_X_Rot_Slider_Offset);
 		rotXString = tempString.c_str();
 
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_orientation.y);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_orientation.y + m_Display_List->at(m_selectedObjects[0]).m_Y_Rot_Slider_Offset);
 		rotYString = tempString.c_str();
 
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_orientation.z);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_orientation.z + m_Display_List->at(m_selectedObjects[0]).m_Z_Rot_Slider_Offset);
 		rotZString = tempString.c_str();
 
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_scale.x);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_scale.x + m_Display_List->at(m_selectedObjects[0]).m_X_Scale_Slider_Offset);
 		scaleXString = tempString.c_str();
 
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_scale.y);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_scale.y + m_Display_List->at(m_selectedObjects[0]).m_Y_Scale_Slider_Offset);
 		scaleYString = tempString.c_str();
 
-		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_scale.z);
+		tempString = std::to_wstring(m_Display_List->at(m_selectedObjects[0]).m_scale.z + m_Display_List->at(m_selectedObjects[0]).m_Z_Scale_Slider_Offset);
 		scaleZString = tempString.c_str();
 
 	}
@@ -130,6 +173,23 @@ void InspectorDialogue::updateTransformEditText()
 	SetDlgItemText(IDC_EDIT_Z_SCALE, scaleZString);
 
 }
+
+void InspectorDialogue::resetSliders()
+{
+	slider_X_Pos.SetPos(0);
+	slider_Y_Pos.SetPos(0);
+	slider_Z_Pos.SetPos(0);
+
+	slider_X_Rot.SetPos(0);
+	slider_Y_Rot.SetPos(0);
+	slider_Z_Rot.SetPos(0);
+
+	slider_X_Scale.SetPos(0);
+	slider_Y_Scale.SetPos(0);
+	slider_Z_Scale.SetPos(0);
+
+}
+
 
 void InspectorDialogue::DoDataExchange(CDataExchange* pDX)
 {
@@ -164,6 +224,37 @@ void InspectorDialogue::DoDataExchange(CDataExchange* pDX)
 
 BOOL InspectorDialogue::OnInitDialog()
 {
+	//Initialize sliders to sit in the middle for both positive and negative adujustment
+
+	CDialogEx::OnInitDialog();
+
+	slider_X_Pos.SetRange(-200, 200, true);
+	slider_X_Pos.SetPos(0);
+
+	slider_Y_Pos.SetRange(-200, 200, true);
+	slider_Y_Pos.SetPos(0);
+
+	slider_Z_Pos.SetRange(-200, 200, true);
+	slider_Z_Pos.SetPos(0);
+
+	slider_X_Rot.SetRange(-200, 200, true);
+	slider_X_Rot.SetPos(0);
+
+	slider_Y_Rot.SetRange(-200, 200, true);
+	slider_Y_Rot.SetPos(0);
+
+	slider_Z_Rot.SetRange(-200, 200, true);
+	slider_Z_Rot.SetPos(0);
+
+	slider_X_Scale.SetRange(-200, 200, true);
+	slider_X_Scale.SetPos(0);
+
+	slider_Y_Scale.SetRange(-200, 200, true);
+	slider_Y_Scale.SetPos(0);
+
+	slider_Z_Scale.SetRange(-200, 200, true);
+	slider_Z_Scale.SetPos(0);
+
 
 	return true;
 }
@@ -171,6 +262,15 @@ BOOL InspectorDialogue::OnInitDialog()
 
 BEGIN_MESSAGE_MAP(InspectorDialogue, CDialogEx)
 
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_X_POS, &InspectorDialogue::OnNMCustomdrawSliderXPos)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Y_POS, &InspectorDialogue::OnNMCustomdrawSliderYPos)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Z_POS, &InspectorDialogue::OnNMCustomdrawSliderZPos)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_X_ROT, &InspectorDialogue::OnNMCustomdrawSliderXRot)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Y_ROT, &InspectorDialogue::OnNMCustomdrawSliderYRot)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Z_ROT, &InspectorDialogue::OnNMCustomdrawSliderZRot)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_X_SCALE, &InspectorDialogue::OnNMCustomdrawSliderXScale)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Y_SCALE, &InspectorDialogue::OnNMCustomdrawSliderYScale)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Z_SCALE, &InspectorDialogue::OnNMCustomdrawSliderZScale)
 END_MESSAGE_MAP()
 
 
@@ -191,3 +291,135 @@ void InspectorDialogue::OnEnChangeEditXPos()
 
 
 
+
+
+void InspectorDialogue::OnNMCustomdrawSliderXPos(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_X_Pos_Slider_Offset = slider_X_Pos.GetPos();
+	}
+	else {
+		slider_X_Pos.SetPos(0);
+	}
+
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderYPos(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_Y_Pos_Slider_Offset = slider_Y_Pos.GetPos();
+	}
+	else {
+		slider_Y_Pos.SetPos(0);
+	}
+
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderZPos(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_Z_Pos_Slider_Offset = slider_Z_Pos.GetPos();
+	}
+	else {
+		slider_Z_Pos.SetPos(0);
+	}
+
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderXRot(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_X_Rot_Slider_Offset = slider_X_Rot.GetPos();
+	}
+	else {
+		slider_X_Rot.SetPos(0);
+	}
+
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderYRot(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_Y_Rot_Slider_Offset = slider_Y_Rot.GetPos();
+	}
+	else {
+		slider_Y_Rot.SetPos(0);
+	}
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderZRot(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_Z_Rot_Slider_Offset = slider_Z_Rot.GetPos();
+	}
+	else {
+		slider_Z_Rot.SetPos(0);
+	}
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderXScale(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_X_Scale_Slider_Offset = slider_X_Scale.GetPos();
+	}
+	else {
+		slider_X_Scale.SetPos(0);
+	}
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderYScale(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_Y_Scale_Slider_Offset = slider_Y_Scale.GetPos();
+	}
+	else {
+		slider_Y_Scale.SetPos(0);
+	}
+	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderZScale(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	if (m_selectedObjects.size() == 1) {
+		m_Display_List->at(m_selectedObjects[0]).m_Z_Scale_Slider_Offset = slider_Z_Scale.GetPos();
+	}
+	else {
+		slider_Z_Scale.SetPos(0);
+	}
+	*pResult = 0;
+}

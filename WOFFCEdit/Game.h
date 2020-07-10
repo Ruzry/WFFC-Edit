@@ -60,6 +60,7 @@ public:
 
 
 	std::vector<DisplayObject>* getDisplayList() { return &m_displayList; }
+	std::vector<int> getSelectedIDs() { return selectedIDs; }
 
 private:
 

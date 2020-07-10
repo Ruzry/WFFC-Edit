@@ -24,7 +24,7 @@ public:
 	void update(std::vector<DisplayObject>* display_List, std::vector<int> selectedObjects);
 	void updateSelectionEditText();
 	void updateTransformEditText();
-
+	void resetSliders();
 
 
 private:
@@ -70,4 +70,14 @@ public:
 	CSliderCtrl slider_X_Scale;
 	CSliderCtrl slider_Y_Scale;
 	CSliderCtrl slider_Z_Scale;
+
+	afx_msg void OnNMCustomdrawSliderXPos(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderYPos(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderZPos(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderXRot(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderYRot(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderZRot(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderXScale(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderYScale(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnNMCustomdrawSliderZScale(NMHDR *pNMHDR, LRESULT *pResult);
 };
