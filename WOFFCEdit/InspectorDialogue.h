@@ -2,6 +2,8 @@
 
 #include "resource.h"
 #include "ToolMain.h"
+#include "Custom_CEdit.h"
+#include "MyCustom_CEdit.h"
 // InspectorDialogue dialog
 
 class InspectorDialogue : public CDialogEx
@@ -38,26 +40,25 @@ protected:
 	virtual BOOL OnInitDialog() override;
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnEnChangeEditXPos();
 
-
+	bool inputFocus = false;
 
 
 	CEdit edit_TextBox_ObjectID;
 
 	CButton check_Show_Object;
 
-	CEdit edit_X_Pos;
-	CEdit edit_Y_Pos;
-	CEdit edit_Z_Pos;
+	Custom_CEdit edit_X_Pos;
+	Custom_CEdit edit_Y_Pos;
+	Custom_CEdit edit_Z_Pos;
 
-	CEdit edit_X_Rot;
-	CEdit edit_Y_Rot;
-	CEdit edit_Z_Rot;
+	Custom_CEdit edit_X_Rot;
+	Custom_CEdit edit_Y_Rot;
+	Custom_CEdit edit_Z_Rot;
 
-	CEdit edit_X_Scale;
-	CEdit edit_Y_Scale;
-	CEdit edit_Z_Scale;
+	Custom_CEdit edit_X_Scale;
+	Custom_CEdit edit_Y_Scale;
+	Custom_CEdit edit_Z_Scale;
 
 	CSliderCtrl slider_X_Pos;
 	CSliderCtrl slider_Y_Pos;
@@ -80,4 +81,40 @@ public:
 	afx_msg void OnNMCustomdrawSliderXScale(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMCustomdrawSliderYScale(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnNMCustomdrawSliderZScale(NMHDR *pNMHDR, LRESULT *pResult);
+	
+	afx_msg void OnEnSetfocusEditXPos();
+	afx_msg void OnEnKillfocusEditXPos();
+	afx_msg void OnEnChangeEditXPos();
+
+	afx_msg void OnEnSetfocusEditYPos();
+	afx_msg void OnEnKillfocusEditYPos();
+	afx_msg void OnEnChangeEditYPos();
+
+	afx_msg void OnEnSetfocusEditZPos();
+	afx_msg void OnEnKillfocusEditZPos();
+	afx_msg void OnEnChangeEditZPos();
+
+	afx_msg void OnEnSetfocusEditXRot();
+	afx_msg void OnEnKillfocusEditXRot();
+	afx_msg void OnEnChangeEditXRot();
+
+	afx_msg void OnEnSetfocusEditYRot();
+	afx_msg void OnEnKillfocusEditYRot();
+	afx_msg void OnEnChangeEditYRot();
+
+	afx_msg void OnEnSetfocusEditZRot();
+	afx_msg void OnEnKillfocusEditZRot();
+	afx_msg void OnEnChangeEditZRot();
+
+	afx_msg void OnEnSetfocusEditXScale();
+	afx_msg void OnEnKillfocusEditXScale();
+	afx_msg void OnEnChangeEditXScale();
+
+	afx_msg void OnEnSetfocusEditYScale();
+	afx_msg void OnEnKillfocusEditYScale();
+	afx_msg void OnEnChangeEditYScale();
+
+	afx_msg void OnEnSetfocusEditZScale();
+	afx_msg void OnEnKillfocusEditZScale();
+	afx_msg void OnEnChangeEditZScale();
 };

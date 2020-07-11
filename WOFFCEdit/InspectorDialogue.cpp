@@ -165,17 +165,34 @@ void InspectorDialogue::updateTransformEditText()
 	
 	}
 
-	SetDlgItemText(IDC_EDIT_X_POS, posXString);
-	SetDlgItemText(IDC_EDIT_Y_POS, posYString);
-	SetDlgItemText(IDC_EDIT_Z_POS, posZString);
 
-	SetDlgItemText(IDC_EDIT_X_ROT, rotXString);
-	SetDlgItemText(IDC_EDIT_Y_ROT, rotYString);
-	SetDlgItemText(IDC_EDIT_Z_ROT, rotZString);
 
-	SetDlgItemText(IDC_EDIT_X_SCALE, scaleXString);
-	SetDlgItemText(IDC_EDIT_Y_SCALE, scaleYString);
-	SetDlgItemText(IDC_EDIT_Z_SCALE, scaleZString);
+	if (!edit_X_Pos.isFocused) 
+		SetDlgItemText(IDC_EDIT_X_POS, posXString);
+
+	if (!edit_Y_Pos.isFocused)
+		SetDlgItemText(IDC_EDIT_Y_POS, posYString);
+	
+	if (!edit_Z_Pos.isFocused)
+		SetDlgItemText(IDC_EDIT_Z_POS, posZString);
+
+	if (!edit_X_Rot.isFocused)
+		SetDlgItemText(IDC_EDIT_X_ROT, rotXString);
+
+	if (!edit_Y_Rot.isFocused)
+		SetDlgItemText(IDC_EDIT_Y_ROT, rotYString);
+	
+	if (!edit_Z_Rot.isFocused)
+		SetDlgItemText(IDC_EDIT_Z_ROT, rotZString);
+
+	if (!edit_X_Scale.isFocused)
+		SetDlgItemText(IDC_EDIT_X_SCALE, scaleXString);
+
+	if (!edit_Y_Scale.isFocused)
+		SetDlgItemText(IDC_EDIT_Y_SCALE, scaleYString);
+
+	if (!edit_Z_Scale.isFocused)
+		SetDlgItemText(IDC_EDIT_Z_SCALE, scaleZString);
 
 }
 
@@ -233,6 +250,8 @@ BOOL InspectorDialogue::OnInitDialog()
 
 	CDialogEx::OnInitDialog();
 
+	//edit_X_Pos.ModifyStyle(0, ES_NUMBER);
+
 	slider_X_Pos.SetRange(-200, 200, true);
 	slider_X_Pos.SetPos(0);
 
@@ -260,6 +279,8 @@ BOOL InspectorDialogue::OnInitDialog()
 	slider_Z_Scale.SetRange(-200, 200, true);
 	slider_Z_Scale.SetPos(0);
 
+	//edit_test.SubclassDlgItem(IDC_EDIT1, this);
+	//edit_X_Pos.SubclassDlgItem(IDC_EDIT_X_POS, this);
 
 	return true;
 }
@@ -276,23 +297,38 @@ BEGIN_MESSAGE_MAP(InspectorDialogue, CDialogEx)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_X_SCALE, &InspectorDialogue::OnNMCustomdrawSliderXScale)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Y_SCALE, &InspectorDialogue::OnNMCustomdrawSliderYScale)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_Z_SCALE, &InspectorDialogue::OnNMCustomdrawSliderZScale)
+	ON_EN_SETFOCUS(IDC_EDIT_X_POS, &InspectorDialogue::OnEnSetfocusEditXPos)
+	ON_EN_KILLFOCUS(IDC_EDIT_X_POS, &InspectorDialogue::OnEnKillfocusEditXPos)
+	ON_EN_CHANGE(IDC_EDIT_X_POS, &InspectorDialogue::OnEnChangeEditXPos)
+	ON_EN_SETFOCUS(IDC_EDIT_Y_POS, &InspectorDialogue::OnEnSetfocusEditYPos)
+	ON_EN_KILLFOCUS(IDC_EDIT_Y_POS, &InspectorDialogue::OnEnKillfocusEditYPos)
+	ON_EN_CHANGE(IDC_EDIT_Y_POS, &InspectorDialogue::OnEnChangeEditYPos)
+	ON_EN_SETFOCUS(IDC_EDIT_Z_POS, &InspectorDialogue::OnEnSetfocusEditZPos)
+	ON_EN_KILLFOCUS(IDC_EDIT_Z_POS, &InspectorDialogue::OnEnKillfocusEditZPos)
+	ON_EN_CHANGE(IDC_EDIT_Z_POS, &InspectorDialogue::OnEnChangeEditZPos)
+	ON_EN_SETFOCUS(IDC_EDIT_X_ROT, &InspectorDialogue::OnEnSetfocusEditXRot)
+	ON_EN_KILLFOCUS(IDC_EDIT_X_ROT, &InspectorDialogue::OnEnKillfocusEditXRot)
+	ON_EN_CHANGE(IDC_EDIT_X_ROT, &InspectorDialogue::OnEnChangeEditXRot)
+	ON_EN_SETFOCUS(IDC_EDIT_Y_ROT, &InspectorDialogue::OnEnSetfocusEditYRot)
+	ON_EN_KILLFOCUS(IDC_EDIT_Y_ROT, &InspectorDialogue::OnEnKillfocusEditYRot)
+	ON_EN_CHANGE(IDC_EDIT_Y_ROT, &InspectorDialogue::OnEnChangeEditYRot)
+	ON_EN_SETFOCUS(IDC_EDIT_Z_ROT, &InspectorDialogue::OnEnSetfocusEditZRot)
+	ON_EN_KILLFOCUS(IDC_EDIT_Z_ROT, &InspectorDialogue::OnEnKillfocusEditZRot)
+	ON_EN_CHANGE(IDC_EDIT_Z_ROT, &InspectorDialogue::OnEnChangeEditZRot)
+	ON_EN_SETFOCUS(IDC_EDIT_X_SCALE, &InspectorDialogue::OnEnSetfocusEditXScale)
+	ON_EN_KILLFOCUS(IDC_EDIT_X_SCALE, &InspectorDialogue::OnEnKillfocusEditXScale)
+	ON_EN_CHANGE(IDC_EDIT_X_SCALE, &InspectorDialogue::OnEnChangeEditXScale)
+	ON_EN_SETFOCUS(IDC_EDIT_Y_SCALE, &InspectorDialogue::OnEnSetfocusEditYScale)
+	ON_EN_KILLFOCUS(IDC_EDIT_Y_SCALE, &InspectorDialogue::OnEnKillfocusEditYScale)
+	ON_EN_CHANGE(IDC_EDIT_Y_SCALE, &InspectorDialogue::OnEnChangeEditYScale)
+	ON_EN_SETFOCUS(IDC_EDIT_Z_SCALE, &InspectorDialogue::OnEnSetfocusEditZScale)
+	ON_EN_KILLFOCUS(IDC_EDIT_Z_SCALE, &InspectorDialogue::OnEnKillfocusEditZScale)
+	ON_EN_CHANGE(IDC_EDIT_Z_SCALE, &InspectorDialogue::OnEnChangeEditZScale)
 END_MESSAGE_MAP()
 
 
 // InspectorDialogue message handlers
 
-
-void InspectorDialogue::OnEnChangeEditXPos()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialogEx::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	
-
-	// TODO:  Add your control notification handler code here
-}
 
 
 
@@ -301,7 +337,6 @@ void InspectorDialogue::OnEnChangeEditXPos()
 void InspectorDialogue::OnNMCustomdrawSliderXPos(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
 
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_X_Pos_Slider_Offset = slider_X_Pos.GetPos();
@@ -317,7 +352,6 @@ void InspectorDialogue::OnNMCustomdrawSliderXPos(NMHDR *pNMHDR, LRESULT *pResult
 void InspectorDialogue::OnNMCustomdrawSliderYPos(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
 
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_Y_Pos_Slider_Offset = slider_Y_Pos.GetPos();
@@ -333,7 +367,7 @@ void InspectorDialogue::OnNMCustomdrawSliderYPos(NMHDR *pNMHDR, LRESULT *pResult
 void InspectorDialogue::OnNMCustomdrawSliderZPos(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_Z_Pos_Slider_Offset = slider_Z_Pos.GetPos();
 	}
@@ -348,7 +382,7 @@ void InspectorDialogue::OnNMCustomdrawSliderZPos(NMHDR *pNMHDR, LRESULT *pResult
 void InspectorDialogue::OnNMCustomdrawSliderXRot(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_X_Rot_Slider_Offset = slider_X_Rot.GetPos();
 	}
@@ -363,7 +397,7 @@ void InspectorDialogue::OnNMCustomdrawSliderXRot(NMHDR *pNMHDR, LRESULT *pResult
 void InspectorDialogue::OnNMCustomdrawSliderYRot(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_Y_Rot_Slider_Offset = slider_Y_Rot.GetPos();
 	}
@@ -377,7 +411,7 @@ void InspectorDialogue::OnNMCustomdrawSliderYRot(NMHDR *pNMHDR, LRESULT *pResult
 void InspectorDialogue::OnNMCustomdrawSliderZRot(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_Z_Rot_Slider_Offset = slider_Z_Rot.GetPos();
 	}
@@ -391,7 +425,7 @@ void InspectorDialogue::OnNMCustomdrawSliderZRot(NMHDR *pNMHDR, LRESULT *pResult
 void InspectorDialogue::OnNMCustomdrawSliderXScale(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_X_Scale_Slider_Offset = slider_X_Scale.GetPos();
 	}
@@ -405,7 +439,7 @@ void InspectorDialogue::OnNMCustomdrawSliderXScale(NMHDR *pNMHDR, LRESULT *pResu
 void InspectorDialogue::OnNMCustomdrawSliderYScale(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_Y_Scale_Slider_Offset = slider_Y_Scale.GetPos();
 	}
@@ -419,7 +453,7 @@ void InspectorDialogue::OnNMCustomdrawSliderYScale(NMHDR *pNMHDR, LRESULT *pResu
 void InspectorDialogue::OnNMCustomdrawSliderZScale(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMCUSTOMDRAW pNMCD = reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+
 	if (m_selectedObjects->size() == 1) {
 		m_Display_List->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset = slider_Z_Scale.GetPos();
 	}
@@ -427,4 +461,302 @@ void InspectorDialogue::OnNMCustomdrawSliderZScale(NMHDR *pNMHDR, LRESULT *pResu
 		slider_Z_Scale.SetPos(0);
 	}
 	*pResult = 0;
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditXPos()
+{
+	edit_X_Pos.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_position.x += m_Display_List->at(m_selectedObjects->at(0)).m_X_Pos_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_X_Pos_Slider_Offset = 0;
+		slider_X_Pos.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditXPos()
+{
+	edit_X_Pos.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditXPos()
+{
+	if (edit_X_Pos.isFocused) {
+		CString temp;
+		edit_X_Pos.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_position.x = _ttof(temp);
+		}
+
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditYPos()
+{
+	edit_Y_Pos.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_position.y += m_Display_List->at(m_selectedObjects->at(0)).m_Y_Pos_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_Y_Pos_Slider_Offset = 0;
+		slider_Y_Pos.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditYPos()
+{
+	edit_Y_Pos.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditYPos()
+{
+	if (edit_Y_Pos.isFocused) {
+		CString temp;
+		edit_Y_Pos.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_position.y = _ttof(temp);
+		}
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditZPos()
+{
+	edit_Z_Pos.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_position.z += m_Display_List->at(m_selectedObjects->at(0)).m_Z_Pos_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_Z_Pos_Slider_Offset = 0;
+		slider_Z_Pos.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditZPos()
+{
+	edit_Z_Pos.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditZPos()
+{
+	if (edit_Z_Pos.isFocused) {
+		CString temp;
+		edit_Z_Pos.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_position.z = _ttof(temp);
+		}
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditXRot()
+{
+	edit_X_Rot.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_orientation.x += m_Display_List->at(m_selectedObjects->at(0)).m_X_Rot_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_X_Rot_Slider_Offset = 0;
+		slider_X_Rot.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditXRot()
+{
+	edit_X_Rot.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditXRot()
+{
+	if (edit_X_Rot.isFocused) {
+		CString temp;
+		edit_X_Rot.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_orientation.x = _ttof(temp);
+		}
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditYRot()
+{
+	edit_Y_Rot.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_orientation.y += m_Display_List->at(m_selectedObjects->at(0)).m_Y_Rot_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_Y_Rot_Slider_Offset = 0;
+		slider_Y_Rot.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditYRot()
+{
+	edit_Y_Rot.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditYRot()
+{
+	if (edit_Y_Rot.isFocused) {
+		CString temp;
+		edit_Y_Rot.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_orientation.y = _ttof(temp);
+		}
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditZRot()
+{
+	edit_Z_Rot.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_orientation.z += m_Display_List->at(m_selectedObjects->at(0)).m_Z_Rot_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_Z_Rot_Slider_Offset = 0;
+		slider_Z_Rot.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditZRot()
+{
+	edit_Z_Rot.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditZRot()
+{
+	if (edit_Z_Rot.isFocused) {
+		CString temp;
+		edit_Z_Rot.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_orientation.z = _ttof(temp);
+		}
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditXScale()
+{
+	edit_X_Scale.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_scale.x += m_Display_List->at(m_selectedObjects->at(0)).m_X_Scale_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_X_Scale_Slider_Offset = 0;
+		slider_X_Scale.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditXScale()
+{
+	edit_X_Scale.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditXScale()
+{
+	if (edit_X_Scale.isFocused) {
+		CString temp;
+		edit_X_Scale.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_scale.x = _ttof(temp);
+		}
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditYScale()
+{
+	edit_Y_Scale.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_scale.y += m_Display_List->at(m_selectedObjects->at(0)).m_Y_Scale_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_Y_Scale_Slider_Offset = 0;
+		slider_Y_Scale.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditYScale()
+{
+	edit_Y_Scale.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditYScale()
+{
+	if (edit_Y_Scale.isFocused) {
+		CString temp;
+		edit_Y_Scale.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_scale.y = _ttof(temp);
+		}
+	}
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditZScale()
+{
+	edit_Z_Scale.isFocused = true;
+
+	if (m_selectedObjects->size() == 1) {
+
+		m_Display_List->at(m_selectedObjects->at(0)).m_scale.z += m_Display_List->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset;
+		m_Display_List->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset = 0;
+		slider_Z_Scale.SetPos(0);
+
+	}
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditZScale()
+{
+	edit_Z_Scale.isFocused = false;
+}
+
+
+void InspectorDialogue::OnEnChangeEditZScale()
+{
+	if (edit_Z_Scale.isFocused) {
+		CString temp;
+		edit_Z_Scale.GetWindowTextW(temp);
+
+		if (temp.GetLength() > 0) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_scale.z = _ttof(temp);
+		}
+	}
 }

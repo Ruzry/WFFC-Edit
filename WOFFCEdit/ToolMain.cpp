@@ -368,8 +368,8 @@ void ToolMain::UpdateInput(MSG * msg)
 
 	std::string test = "Mouse X pos: " + std::to_string(m_mouseX) + "Mouse Y pos: " + std::to_string(m_mouseY);
 	
-	OutputDebugStringA(test.c_str());
-	OutputDebugStringA("\n");
+	//OutputDebugStringA(test.c_str());
+	//OutputDebugStringA("\n");
 	
 
 	m_toolInputCommands.mouseX = m_mouseX;

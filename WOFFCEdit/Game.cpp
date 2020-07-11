@@ -110,28 +110,6 @@ void Game::Tick(InputCommands *Input)
 	//copy over the input commands so we have a local version to use elsewhere.
 	m_InputCommands = *Input;
 
-	//if (m_InputCommands.unselect == true) {
-	//	selected = false;
-
-	//	if (previousIDs.size() > 0) {
-	//		for (int i = 0; i < previousIDs.size(); i++) {
-
-	//			m_displayList[previousIDs[i]].m_wireframe = false;
-
-	//		}
-	//	}
-
-	//	if (selectedIDs.size() > 0) {
-	//		for (int i = 0; i < selectedIDs.size(); i++) {
-
-	//			m_displayList[selectedIDs[i]].m_wireframe = false;
-
-	//		}
-	//	}
-
-	//	selectedIDs.clear();
-
-	//}
 	updateSelection();
 
     m_timer.Tick([&]()

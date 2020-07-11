@@ -63,6 +63,8 @@
     <ClCompile Include="InspectorDialogue.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
+    <ClCompile Include="Custom_CEdit.cpp" />
+    <ClCompile Include="MyCustom_CEdit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -116,6 +118,8 @@
     <ClInclude Include="InspectorDialogue.h">
       <Filter>MFC</Filter>
     </ClInclude>
+    <ClInclude Include="Custom_CEdit.h" />
+    <ClInclude Include="MyCustom_CEdit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
