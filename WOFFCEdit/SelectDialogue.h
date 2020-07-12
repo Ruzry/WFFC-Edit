@@ -4,9 +4,18 @@
 #include "afxwin.h"
 #include "SceneObject.h"
 #include <vector>
+#include "DisplayObject.h"
+#include <codecvt>
+
+
+// utility wrapper to adapt locale-bound facets for wstring/wbuffer convert
+template <typename Facet>
+struct deletable_facet : Facet
+{
+	using Facet::Facet;
+};
 
 // SelectDialogue dialog
-
 class SelectDialogue : public CDialogEx
 {
 	DECLARE_DYNAMIC(SelectDialogue)
@@ -15,7 +24,7 @@ public:
 	SelectDialogue(CWnd* pParent, std::vector<SceneObject>* SceneGraph);   // modal // takes in out scenegraph in the constructor
 	SelectDialogue(CWnd* pParent = NULL);
 	virtual ~SelectDialogue();
-	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int> * Selection, bool* selected);	//passing in pointers to the data the class will operate on.
+	void SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<DisplayObject>* displayList, std::vector<int> * Selection, bool* selected);	//passing in pointers to the data the class will operate on.
 	
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -32,7 +41,7 @@ protected:
 
 	std::vector<SceneObject> * m_sceneGraph;
 	std::vector<int>* m_currentSelections;
-	
+	std::vector<DisplayObject>* m_displayList;
 
 	DECLARE_MESSAGE_MAP()
 public:

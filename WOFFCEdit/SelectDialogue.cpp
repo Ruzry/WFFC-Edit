@@ -32,20 +32,29 @@ SelectDialogue::~SelectDialogue()
 }
 
 ///pass through pointers to the data in the tool we want to manipulate
-void SelectDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<int> * selection, bool* selected)
+void SelectDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<DisplayObject>* displayList, std::vector<int> * selection, bool* selected)
 {
 	m_sceneGraph = SceneGraph;
+	m_displayList = displayList;
 	m_currentSelections = selection;
 	m_selected = selected;
 
-	
+	std::wstring_convert<deletable_facet<std::codecvt<wchar_t, char, std::mbstate_t>>> conv;
+	std::wstring tempName, tempVisible;
 
 	//roll through all the objects in the scene graph and put an entry for each in the listbox
 	int numSceneObjects = m_sceneGraph->size();
 	for (int i = 0; i < numSceneObjects; i++)
 	{
+		tempName = conv.from_bytes(m_displayList->at(i).m_name);
+
+		if (m_displayList->at(i).m_render) 
+			tempVisible = L"True";
+		else
+			tempVisible = L"False";
+
 		//easily possible to make the data string presented more complex. showing other columns.
-		std::wstring listBoxEntry = std::to_wstring(m_sceneGraph->at(i).ID);
+		std::wstring listBoxEntry = L"ID: " + std::to_wstring(m_sceneGraph->at(i).ID) + L"   Name:" + tempName + L"     Visible: " + tempVisible;
 		m_listBox.AddString(listBoxEntry.c_str());
 	}
 }
@@ -66,13 +75,9 @@ void SelectDialogue::End()
 void SelectDialogue::Select()
 {
 	int index = m_listBox.GetCurSel();
-	CString currentSelectionValue;
-	
-	m_listBox.GetText(index, currentSelectionValue);
-
 
 	m_currentSelections->clear();
-	m_currentSelections->push_back(_ttoi(currentSelectionValue));
+	m_currentSelections->push_back(m_sceneGraph->at(index).ID);
 
 	*m_selected = true;
 }

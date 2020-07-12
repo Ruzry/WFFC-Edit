@@ -22,8 +22,8 @@ public:
 	enum { IDD = IDD_DIALOG2 };
 #endif
 
-	void initializeConnection(ToolMain* toolSystem);
-	void update(std::vector<DisplayObject>* display_List, std::vector<int>* selectedObjects);
+	void initializeConnection(ToolMain* toolSystem, std::vector<DisplayObject>* display_List, std::vector<int>* selectedObjects);
+	void update();
 	void updateSelectionEditText();
 	void updateTransformEditText();
 	void resetSliders();
@@ -34,6 +34,7 @@ private:
 
 	std::vector<DisplayObject>* m_Display_List;
 	std::vector<int>* m_selectedObjects;
+	void updateNameEdit();
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -117,4 +118,18 @@ public:
 	afx_msg void OnEnSetfocusEditZScale();
 	afx_msg void OnEnKillfocusEditZScale();
 	afx_msg void OnEnChangeEditZScale();
+	afx_msg void OnBnClickedCheckVisible();
+
+	CButton check_Visible;
+	bool check_focus;
+	BOOL check_enableDisable;
+	afx_msg void OnBnKillfocusCheckVisible();
+	afx_msg void OnBnSetfocusCheckVisible();
+
+
+	CEdit edit_Set_Name;
+	bool edit_Set_Name_IsFocused;
+	afx_msg void OnEnChangeEditNameInput();
+	afx_msg void OnEnSetfocusEditNameInput();
+	afx_msg void OnEnKillfocusEditNameInput();
 };

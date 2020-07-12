@@ -30,3 +30,30 @@ DisplayObject::~DisplayObject()
 {
 //	delete m_texture_diffuse;
 }
+
+void DisplayObject::applyOffsetValues()
+{
+	m_position.x += m_X_Pos_Slider_Offset;
+	m_position.y += m_Y_Pos_Slider_Offset;
+	m_position.z += m_Z_Pos_Slider_Offset;
+
+	m_X_Pos_Slider_Offset = 0;
+	m_Y_Pos_Slider_Offset = 0;
+	m_Z_Pos_Slider_Offset = 0;
+
+	m_scale.x += m_X_Scale_Slider_Offset;
+	m_scale.y += m_Y_Scale_Slider_Offset;
+	m_scale.z += m_Z_Scale_Slider_Offset;
+
+	m_X_Scale_Slider_Offset = 0;
+	m_Y_Scale_Slider_Offset = 0;
+	m_Z_Scale_Slider_Offset = 0;
+
+	m_orientation.x += m_X_Pos_Slider_Offset;
+	m_orientation.y += m_Y_Pos_Slider_Offset;
+	m_orientation.z += m_Z_Pos_Slider_Offset;
+
+	m_X_Rot_Slider_Offset = 0;
+	m_Y_Rot_Slider_Offset = 0;
+	m_Z_Rot_Slider_Offset = 0;
+}

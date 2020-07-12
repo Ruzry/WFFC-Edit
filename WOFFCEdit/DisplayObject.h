@@ -11,6 +11,7 @@ public:
 	std::shared_ptr<DirectX::Model>						m_model;							//main Mesh
 	ID3D11ShaderResourceView *							m_texture_diffuse;					//diffuse texture
 
+	void applyOffsetValues();
 
 	int m_ID;
 	DirectX::SimpleMath::Vector3			m_position;
@@ -18,6 +19,8 @@ public:
 	DirectX::SimpleMath::Vector3			m_scale;
 	bool									m_render;
 	bool									m_wireframe;
+	bool									m_objectSelected;
+	std::string								m_name;
 
 	int		m_light_type;
 	float	m_light_diffuse_r,	m_light_diffuse_g,	m_light_diffuse_b;

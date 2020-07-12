@@ -12,6 +12,7 @@ IMPLEMENT_DYNAMIC(InspectorDialogue, CDialogEx)
 
 InspectorDialogue::InspectorDialogue(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG2, pParent)
+	, check_enableDisable(TRUE)
 {
 	m_selectedObjects = new std::vector<int>;
 	m_selectedObjects->clear();
@@ -21,24 +22,22 @@ InspectorDialogue::~InspectorDialogue()
 {
 }
 
-void InspectorDialogue::initializeConnection(ToolMain * toolSystem)
+void InspectorDialogue::initializeConnection(ToolMain * toolSystem, std::vector<DisplayObject>* display_List, std::vector<int>* selectedObjects)
 {
 	m_Tool_System = toolSystem;
-	//m_Tool_System.
-}
-
-void InspectorDialogue::update(std::vector<DisplayObject>* display_List, std::vector<int>* selectedObjects)
-{
 	m_Display_List = display_List;
 	m_selectedObjects = selectedObjects;
 
-	CString outputString;
-	std::wstring tempString;
+}
+
+void InspectorDialogue::update()
+{
 
 	updateSelectionEditText();
 
 	updateTransformEditText();
 
+	updateNameEdit();
 
 	if (m_selectedObjects->size() == 1) {
 		
@@ -60,6 +59,12 @@ void InspectorDialogue::update(std::vector<DisplayObject>* display_List, std::ve
 
 		slider_Z_Scale.SetPos(m_Display_List->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset);
 	
+		if (check_focus == false) {
+			if (m_Display_List->at(m_selectedObjects->at(0)).m_render)
+				check_Visible.SetCheck(BST_CHECKED);
+			else
+				check_Visible.SetCheck(BST_UNCHECKED);
+		}
 	}
 	else {
 	
@@ -82,6 +87,8 @@ void InspectorDialogue::update(std::vector<DisplayObject>* display_List, std::ve
 		slider_Z_Scale.SetPos(0);
 	
 	}
+
+
 }
 
 void InspectorDialogue::updateSelectionEditText()
@@ -213,11 +220,23 @@ void InspectorDialogue::resetSliders()
 }
 
 
+void InspectorDialogue::updateNameEdit()
+{
+	CString temp;
+
+	if (m_selectedObjects->size() == 1) 
+		temp = m_Display_List->at(m_selectedObjects->at(0)).m_name.c_str();
+	
+
+	if(!edit_Set_Name_IsFocused)
+		SetDlgItemText(IDC_EDIT_NAME_INPUT, temp);
+	
+}
+
 void InspectorDialogue::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT_TEXT_ID, edit_TextBox_ObjectID);
-	DDX_Control(pDX, IDC_CHECK1, check_Show_Object);
 
 	DDX_Control(pDX, IDC_EDIT_X_POS, edit_X_Pos);
 	DDX_Control(pDX, IDC_EDIT_Y_POS, edit_Y_Pos);
@@ -242,6 +261,10 @@ void InspectorDialogue::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SLIDER_X_SCALE, slider_X_Scale);
 	DDX_Control(pDX, IDC_SLIDER_Y_SCALE, slider_Y_Scale);
 	DDX_Control(pDX, IDC_SLIDER_Z_SCALE, slider_Z_Scale);
+	DDX_Control(pDX, IDC_CHECK_VISIBLE, check_Visible);
+
+	DDX_Check(pDX, IDC_CHECK_VISIBLE, check_enableDisable);
+	DDX_Control(pDX, IDC_EDIT_NAME_INPUT, edit_Set_Name);
 }
 
 BOOL InspectorDialogue::OnInitDialog()
@@ -324,6 +347,12 @@ BEGIN_MESSAGE_MAP(InspectorDialogue, CDialogEx)
 	ON_EN_SETFOCUS(IDC_EDIT_Z_SCALE, &InspectorDialogue::OnEnSetfocusEditZScale)
 	ON_EN_KILLFOCUS(IDC_EDIT_Z_SCALE, &InspectorDialogue::OnEnKillfocusEditZScale)
 	ON_EN_CHANGE(IDC_EDIT_Z_SCALE, &InspectorDialogue::OnEnChangeEditZScale)
+	ON_BN_CLICKED(IDC_CHECK_VISIBLE, &InspectorDialogue::OnBnClickedCheckVisible)
+	ON_BN_KILLFOCUS(IDC_CHECK_VISIBLE, &InspectorDialogue::OnBnKillfocusCheckVisible)
+	ON_BN_SETFOCUS(IDC_CHECK_VISIBLE, &InspectorDialogue::OnBnSetfocusCheckVisible)
+	ON_EN_CHANGE(IDC_EDIT_NAME_INPUT, &InspectorDialogue::OnEnChangeEditNameInput)
+	ON_EN_SETFOCUS(IDC_EDIT_NAME_INPUT, &InspectorDialogue::OnEnSetfocusEditNameInput)
+	ON_EN_KILLFOCUS(IDC_EDIT_NAME_INPUT, &InspectorDialogue::OnEnKillfocusEditNameInput)
 END_MESSAGE_MAP()
 
 
@@ -759,4 +788,70 @@ void InspectorDialogue::OnEnChangeEditZScale()
 			m_Display_List->at(m_selectedObjects->at(0)).m_scale.z = _ttof(temp);
 		}
 	}
+}
+
+
+void InspectorDialogue::OnBnClickedCheckVisible()
+{
+	UpdateData();
+
+	if (check_enableDisable) {
+		if (m_selectedObjects->size() == 1){
+			m_Display_List->at(m_selectedObjects->at(0)).m_render = true;
+		}
+	}
+	else {
+		if (m_selectedObjects->size() == 1) {
+			m_Display_List->at(m_selectedObjects->at(0)).m_render = false;
+		}
+	}
+}
+
+
+void InspectorDialogue::OnBnKillfocusCheckVisible()
+{
+	check_Visible.SetCheck(BST_UNCHECKED);
+	check_focus = false;
+}
+
+
+void InspectorDialogue::OnBnSetfocusCheckVisible()
+{
+	check_focus = true;
+
+	if (m_selectedObjects->at(0) == 1) {
+
+		if(m_Display_List->at(m_selectedObjects->at(0)).m_render)
+			check_Visible.SetCheck(BST_CHECKED);
+		else
+			check_Visible.SetCheck(BST_UNCHECKED);
+	}
+}
+
+
+void InspectorDialogue::OnEnChangeEditNameInput()
+{
+	CString temp;
+	edit_Set_Name.GetWindowTextW(temp);
+	CT2CA pszConvertedAnsiString(temp);
+
+	std::string basicString(pszConvertedAnsiString);
+
+	if (m_selectedObjects->size() == 1) {
+		m_Display_List->at(m_selectedObjects->at(0)).m_name = basicString;
+	
+	}
+
+}
+
+
+void InspectorDialogue::OnEnSetfocusEditNameInput()
+{
+	edit_Set_Name_IsFocused = true;
+}
+
+
+void InspectorDialogue::OnEnKillfocusEditNameInput()
+{
+	edit_Set_Name_IsFocused = false;
 }

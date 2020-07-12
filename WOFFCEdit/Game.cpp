@@ -182,6 +182,7 @@ void Game::updateSelection()
 			for (int i = 0; i < previousIDs.size(); i++) {
 
 				m_displayList[previousIDs[i]].m_wireframe = false;
+				m_displayList[previousIDs[i]].m_objectSelected = false;
 
 			}
 		}
@@ -191,6 +192,7 @@ void Game::updateSelection()
 			for (int i = 0; i < selectedIDs.size(); i++) {
 
 				m_displayList[selectedIDs[i]].m_wireframe = true;
+				m_displayList[selectedIDs[i]].m_objectSelected = true;
 
 			}
 		}
@@ -205,6 +207,7 @@ void Game::updateSelection()
 			for (int i = 0; i < previousIDs.size(); i++) {
 
 				m_displayList[previousIDs[i]].m_wireframe = false;
+				m_displayList[previousIDs[i]].m_objectSelected = false;
 
 			}
 		}
@@ -213,6 +216,7 @@ void Game::updateSelection()
 			for (int i = 0; i < selectedIDs.size(); i++) {
 
 				m_displayList[selectedIDs[i]].m_wireframe = false;
+				m_displayList[selectedIDs[i]].m_objectSelected = false;
 
 			}
 		}
@@ -270,8 +274,13 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
-
+		if (m_displayList[i].m_render) {
+			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
+		}
+		else if (m_displayList[i].m_render == false && m_displayList[i].m_objectSelected == true){
+			m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, true);
+		
+		}
 		m_deviceResources->PIXEndEvent();
 	}
     m_deviceResources->PIXEndEvent();
@@ -433,6 +442,8 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 				lights->SetTexture(newDisplayObject.m_texture_diffuse);			
 			}
 		});
+
+		newDisplayObject.m_name = SceneGraph->at(i).name;
 
 		//set position
 		newDisplayObject.m_position.x = SceneGraph->at(i).posX;
@@ -627,47 +638,50 @@ void Game::MousePicking(InputCommands* input)
 		//Loop through mesh list for object
 		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
 		{
-			//checking for ray intersection
-			if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
-			{
-				if (firstpick) {
-					shortestDistance = pickedDistance;
-					firstpick = false;
-				}
-
-				if (pickedDistance <= shortestDistance)
+			//Checking for if the object is current visible
+			if (m_displayList[i].m_render) {
+				//checking for ray intersection
+				if (m_displayList[i].m_model.get()->meshes[y]->boundingBox.Intersects(nearPoint, pickingVector, pickedDistance))
 				{
-
-					if (input->leftCtrl) {
-
-						bool removed = false;
-
-						//If Selected IDs contains it already, then remove it instead
-						for (int j = 0; j < selectedIDs.size(); j++) {
-
-							if (selectedIDs[j] == i) {
-								selectedIDs.erase(selectedIDs.begin() + j);
-								removed = true;
-
-							}
-						}
-
-						if (!removed) {
-
-							selectedIDs.push_back(i);
-						}
-
+					if (firstpick) {
+						shortestDistance = pickedDistance;
+						firstpick = false;
 					}
-					else
+
+					if (pickedDistance <= shortestDistance)
 					{
-						selectedIDs.clear();
-						selectedIDs.push_back(i);
+
+						if (input->leftCtrl) {
+
+							bool removed = false;
+
+							//If Selected IDs contains it already, then remove it instead
+							for (int j = 0; j < selectedIDs.size(); j++) {
+
+								if (selectedIDs[j] == i) {
+									selectedIDs.erase(selectedIDs.begin() + j);
+									removed = true;
+
+								}
+							}
+
+							if (!removed) {
+
+								selectedIDs.push_back(i);
+							}
+
+						}
+						else
+						{
+							selectedIDs.clear();
+							selectedIDs.push_back(i);
+
+						}
+						selectedID = i;
+						shortestDistance = pickedDistance;
+						selected = true;
 
 					}
-					selectedID = i;
-					shortestDistance = pickedDistance;
-					selected = true;
-
 				}
 			}
 		}

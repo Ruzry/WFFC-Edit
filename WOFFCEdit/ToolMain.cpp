@@ -50,6 +50,7 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	m_d3dRenderer.Initialize(handle, m_width, m_height);
 	m_selectedObjects = m_d3dRenderer.getSelectedIDs();
 	m_selected = m_d3dRenderer.getSelected();
+	m_DisplayList = m_d3dRenderer.getDisplayList();
 
 	//database connection establish
 	int rc;
@@ -304,8 +305,6 @@ void ToolMain::Tick(MSG *msg)
 	m_camY = m_d3dRenderer.getCameraPosition().y;
 	m_camZ = m_d3dRenderer.getCameraPosition().z;
 
-	//m_selectedObjects = &m_d3dRenderer.getSelectedIDs();
-	m_DisplayList = m_d3dRenderer.getDisplayList();
 
 	//TODO Update SceneGraph from DisplayList
 
@@ -476,29 +475,9 @@ void ToolMain::updateSceneGraph()
 	for (int i = 0; i < m_sceneGraph.size(); i++) {
 	
 		//Consoldate position values in respect to the offsets and reset the offset
-		m_DisplayList->at(i).m_position.x += m_DisplayList->at(i).m_X_Pos_Slider_Offset;
-		m_DisplayList->at(i).m_position.y += m_DisplayList->at(i).m_Y_Pos_Slider_Offset;
-		m_DisplayList->at(i).m_position.z += m_DisplayList->at(i).m_Z_Pos_Slider_Offset;
+		m_DisplayList->at(i).applyOffsetValues();
 
-		m_DisplayList->at(i).m_X_Pos_Slider_Offset = 0;
-		m_DisplayList->at(i).m_Y_Pos_Slider_Offset = 0;
-		m_DisplayList->at(i).m_Z_Pos_Slider_Offset = 0;
-
-		m_DisplayList->at(i).m_scale.x += m_DisplayList->at(i).m_X_Scale_Slider_Offset;
-		m_DisplayList->at(i).m_scale.y += m_DisplayList->at(i).m_Y_Scale_Slider_Offset;
-		m_DisplayList->at(i).m_scale.z += m_DisplayList->at(i).m_Z_Scale_Slider_Offset;
-
-		m_DisplayList->at(i).m_X_Scale_Slider_Offset = 0;
-		m_DisplayList->at(i).m_Y_Scale_Slider_Offset = 0;
-		m_DisplayList->at(i).m_Z_Scale_Slider_Offset = 0;
-
-		m_DisplayList->at(i).m_orientation.x += m_DisplayList->at(i).m_X_Pos_Slider_Offset;
-		m_DisplayList->at(i).m_orientation.y += m_DisplayList->at(i).m_Y_Pos_Slider_Offset;
-		m_DisplayList->at(i).m_orientation.z += m_DisplayList->at(i).m_Z_Pos_Slider_Offset;
-
-		m_DisplayList->at(i).m_X_Rot_Slider_Offset = 0;
-		m_DisplayList->at(i).m_Y_Rot_Slider_Offset = 0;
-		m_DisplayList->at(i).m_Z_Rot_Slider_Offset = 0;
+		m_sceneGraph[i].name = m_DisplayList->at(i).m_name;
 
 		//Position
 		m_sceneGraph[i].posX = m_DisplayList->at(i).m_position.x;

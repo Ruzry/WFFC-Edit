@@ -42,7 +42,7 @@ BOOL MFCMain::InitInstance()
 	m_ToolSystem.onActionInitialise(m_toolHandle, m_width, m_height);
 
 	m_InspectorDialogue.Create(IDD_DIALOG2);	//Start up modeless
-	m_InspectorDialogue.initializeConnection(&m_ToolSystem);
+	m_InspectorDialogue.initializeConnection(&m_ToolSystem, m_ToolSystem.getDisplayList(), m_ToolSystem.getSelectedObjects());
 	m_InspectorDialogue.ShowWindow(SW_SHOW);	//show modeless
 
 	
@@ -83,7 +83,7 @@ int MFCMain::Run()
 															+ std::to_wstring(m_ToolSystem.m_camZ);
 			m_ToolSystem.Tick(&msg);
 			
-			m_InspectorDialogue.update(m_ToolSystem.getDisplayList(), m_ToolSystem.getSelectedObjects());
+			m_InspectorDialogue.update();
 			
 			//send current object ID to status bar in The main frame
 			m_frame->m_wndStatusBar.SetPaneText(1, statusString.c_str(), 1);	
@@ -112,7 +112,7 @@ void MFCMain::MenuEditSelect()
 	//modeless dialogue must be declared in the class.   If we do local it will go out of scope instantly and destroy itself
 	m_ToolSelectDialogue.Create(IDD_DIALOG1);	//Start up modeless
 	m_ToolSelectDialogue.ShowWindow(SW_SHOW);	//show modeless
-	m_ToolSelectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, m_ToolSystem.m_selectedObjects, m_ToolSystem.getSelected());
+	m_ToolSelectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, m_ToolSystem.getDisplayList(), m_ToolSystem.m_selectedObjects, m_ToolSystem.getSelected());
 }
 
 void MFCMain::MenuFileTest()

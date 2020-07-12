@@ -1,33 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Win32SimpleSample.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  InspectorDialogue.cpp
+  SelectDialogue.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\camera.h(37): warning C4305: 'initializing': truncation from 'double' to 'const float'
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(45): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(53): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(57): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(61): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(96): warning C4018: '<': signed/unsigned mismatch
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(342): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(357): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(372): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(387): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(402): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(416): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(430): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(444): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(458): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(494): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(528): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(561): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(594): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(627): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(660): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(693): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(726): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\ruaraidh\documents\programming\github\wffc-edit\woffcedit\inspectordialogue.cpp(759): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Win32SimpleSample.vcxproj -> D:\Ruaraidh\Documents\Programming\Github\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe
