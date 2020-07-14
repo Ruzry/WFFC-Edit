@@ -39,11 +39,15 @@ int ToolMain::getCurrentSelectionID()
 	return m_selectedObject;
 }
 
-void ToolMain::onActionInitialise(HWND handle, int width, int height)
+void ToolMain::onActionInitialise(HWND handle, CChildRender* mainFrame, int width, int height)
 {
 	//window size, handle etc for directX
 	m_width		= width;
 	m_height	= height;
+	m_toolHandle = &handle;
+	m_mainRenderFrame = mainFrame;
+
+	
 
 	SetCursorPos(m_width / 2, (m_height / 2) + 150);
 	
@@ -51,6 +55,7 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	m_selectedObjects = m_d3dRenderer.getSelectedIDs();
 	m_selected = m_d3dRenderer.getSelected();
 	m_DisplayList = m_d3dRenderer.getDisplayList();
+	m_d3dRenderer.setMouseInWindow(&mainFrame->mouseInWindow);
 
 	//database connection establish
 	int rc;
@@ -67,6 +72,11 @@ void ToolMain::onActionInitialise(HWND handle, int width, int height)
 	}
 
 	onActionLoad();
+
+	//SetCapture(*m_toolHandle);
+
+
+	
 }
 
 void ToolMain::onActionLoad()
@@ -296,8 +306,10 @@ void ToolMain::Tick(MSG *msg)
 
 	if (m_toolInputCommands.mouseLeft) 
 	{
-		m_d3dRenderer.MousePicking(&m_toolInputCommands);
-		m_toolInputCommands.mouseLeft = false;
+		if (m_mainRenderFrame->mouseInWindow) {
+			m_d3dRenderer.MousePicking(&m_toolInputCommands);
+			m_toolInputCommands.mouseLeft = false;
+		}
 	}
 
 	int size = m_selectedObjects->size();
@@ -338,7 +350,7 @@ void ToolMain::UpdateInput(MSG * msg)
 
 		
 		
-		if (GetCapture() == m_toolHandle) {
+		if (GetCapture() == *m_toolHandle) {
 			m_toolInputCommands.mainWindow = true;
 		}
 		else {
@@ -364,15 +376,13 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 	}
 
-
 	std::string test = "Mouse X pos: " + std::to_string(m_mouseX) + "Mouse Y pos: " + std::to_string(m_mouseY);
-	
 	//OutputDebugStringA(test.c_str());
 	//OutputDebugStringA("\n");
 	
 
 	m_toolInputCommands.mouseX = m_mouseX;
-	m_toolInputCommands.MouseY = m_mouseY;
+	m_toolInputCommands.mouseY = m_mouseY;
 
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
@@ -424,7 +434,8 @@ void ToolMain::UpdateInput(MSG * msg)
 
 	if (m_keyArray['C']) 
 	{
-		m_toolInputCommands.unselect = true;
+		if(m_mainRenderFrame->mouseInWindow == true)
+			m_toolInputCommands.unselect = true;
 	}
 	else m_toolInputCommands.unselect = false;
 

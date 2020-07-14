@@ -22,14 +22,25 @@ InspectorDialogue::~InspectorDialogue()
 {
 }
 
-void InspectorDialogue::initializeConnection(ToolMain * toolSystem, std::vector<DisplayObject>* display_List, std::vector<int>* selectedObjects)
+/**
+	Initalize pointer connections between toolMain, this and the 3D preview window.
+	@param ToolMain* pointer
+*/
+void InspectorDialogue::initializeConnection(ToolMain * toolSystem)
 {
 	m_Tool_System = toolSystem;
-	m_Display_List = display_List;
-	m_selectedObjects = selectedObjects;
+	m_Display_List = m_Tool_System->getDisplayList();
+	m_selectedObjects = m_Tool_System->getSelectedObjects();
+	m_inputCommands = m_Tool_System->getInputCommands();
 
+	m_d3d11Renderer.setSelectedObjects(m_Tool_System->getSelectedObjects());
+	m_d3d11Renderer.setInputCommands(m_Tool_System->getInputCommands());
+	m_d3d11Renderer.setMouseInWindow(&m_DirXView.mouseInWindow);
 }
 
+/**
+	Dialogue Update function
+*/
 void InspectorDialogue::update()
 {
 
@@ -41,6 +52,8 @@ void InspectorDialogue::update()
 
 	if (m_selectedObjects->size() == 1) {
 		
+		//Update Sliders
+
 		slider_X_Pos.SetPos(m_Display_List->at(m_selectedObjects->at(0)).m_X_Pos_Slider_Offset);
 
 		slider_Y_Pos.SetPos(m_Display_List->at(m_selectedObjects->at(0)).m_Y_Pos_Slider_Offset);
@@ -59,6 +72,7 @@ void InspectorDialogue::update()
 
 		slider_Z_Scale.SetPos(m_Display_List->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset);
 	
+		//Updates Check box state
 		if (check_focus == false) {
 			if (m_Display_List->at(m_selectedObjects->at(0)).m_render)
 				check_Visible.SetCheck(BST_CHECKED);
@@ -68,6 +82,8 @@ void InspectorDialogue::update()
 	}
 	else {
 	
+		//Set sliders position to default if nothing is selected
+
 		slider_X_Pos.SetPos(0);
 
 		slider_Y_Pos.SetPos(0);
@@ -88,9 +104,13 @@ void InspectorDialogue::update()
 	
 	}
 
+	m_d3d11Renderer.Tick();
 
 }
 
+/**
+	Seperate function for updating the ID Display box
+*/
 void InspectorDialogue::updateSelectionEditText()
 {
 	CString outputString;
@@ -124,6 +144,9 @@ void InspectorDialogue::updateSelectionEditText()
 	}
 }
 
+/**
+	Seperate Function for updating the Transform text boxes
+*/
 void InspectorDialogue::updateTransformEditText()
 {
 
@@ -203,6 +226,9 @@ void InspectorDialogue::updateTransformEditText()
 
 }
 
+/**
+	Reset sliders back to default
+*/
 void InspectorDialogue::resetSliders()
 {
 	slider_X_Pos.SetPos(0);
@@ -219,7 +245,9 @@ void InspectorDialogue::resetSliders()
 
 }
 
-
+/**
+	Update function for Name Input box
+*/
 void InspectorDialogue::updateNameEdit()
 {
 	CString temp;
@@ -233,6 +261,9 @@ void InspectorDialogue::updateNameEdit()
 	
 }
 
+/**
+	MFC Generated Method Linking UI elements to Code counterparts
+*/
 void InspectorDialogue::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -267,6 +298,9 @@ void InspectorDialogue::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_NAME_INPUT, edit_Set_Name);
 }
 
+/**
+	Standard CWnd Initialisation method for the 3D Inspector
+*/
 BOOL InspectorDialogue::OnInitDialog()
 {
 	//Initialize sliders to sit in the middle for both positive and negative adujustment
@@ -304,6 +338,16 @@ BOOL InspectorDialogue::OnInitDialog()
 
 	//edit_test.SubclassDlgItem(IDC_EDIT1, this);
 	//edit_X_Pos.SubclassDlgItem(IDC_EDIT_X_POS, this);
+
+		// create a view to occupy the client area of the frame //This is where DirectX is rendered
+	if (!m_DirXView.Create(NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect(35, 220, 605, 445), this, AFX_IDW_PANE_FIRST, NULL))
+	{
+		TRACE0("Failed to create view window\n");
+		return -1;
+	}
+
+	m_DirXView.ShowWindow(SW_SHOW);
+	m_d3d11Renderer.Initialize(m_DirXView.GetSafeHwnd(), 600, 440);
 
 	return true;
 }

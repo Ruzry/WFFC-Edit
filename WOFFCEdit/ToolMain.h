@@ -8,6 +8,7 @@
 #include "InputCommands.h"
 #include <vector>
 #include "DisplayObject.h"
+#include "MFCRenderFrame.h"
 
 
 class ToolMain
@@ -18,7 +19,7 @@ public: //methods
 
 	//onAction - These are the interface to MFC
 	int		getCurrentSelectionID();										//returns the selection number of currently selected object so that It can be displayed.
-	void	onActionInitialise(HWND handle, int width, int height);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
+	void	onActionInitialise(HWND handle, CChildRender* mainFrame, int width, int height);			//Passes through handle and hieght and width and initialises DirectX renderer and SQL LITE
 	void	onActionFocusCamera();
 	void	onActionLoad();													//load the current chunk
 	afx_msg	void	onActionSave();											//save the current chunk
@@ -34,11 +35,13 @@ public:	//variables
 	
 	int m_selectedObject;		//ID of current Selection
 	std::vector<int>* m_selectedObjects;
+	CChildRender* m_mainRenderFrame;
 	
 	float m_camX, m_camY, m_camZ;
 
 	std::vector<DisplayObject>* getDisplayList() { return m_DisplayList; }
 	std::vector<int>* getSelectedObjects() { return m_selectedObjects; }
+	InputCommands* getInputCommands() { return &m_toolInputCommands; }
 	bool* getSelected() { return m_selected; }
 
 	bool addToSceneGraph(SceneObject newSceneObject);
@@ -49,7 +52,7 @@ private:	//methods
 	void updateSceneGraph();
 		
 private:	//variables
-	HWND	m_toolHandle;		//Handle to the  window
+	HWND*	m_toolHandle;		//Handle to the  window
 	Game	m_d3dRenderer;		//Instance of D3D rendering system for our tool
 	InputCommands m_toolInputCommands;		//input commands that we want to use and possibly pass over to the renderer
 	CRect	WindowRECT;		//Window area rectangle. 

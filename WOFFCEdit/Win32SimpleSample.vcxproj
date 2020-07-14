@@ -173,12 +173,14 @@
     <ClCompile Include="DisplayObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InspectorDialogue.cpp" />
+    <ClCompile Include="InspectorPreview.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MFCFrame.cpp" />
+    <ClCompile Include="MFCInspectorFrame.cpp" />
     <ClCompile Include="MFCRenderFrame.cpp" />
-    <ClCompile Include="MyCustom_CEdit.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="MFCMain.cpp" />
+    <ClCompile Include="PreviewCamera.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="SelectDialogue.cpp" />
     <ClCompile Include="sqlite3.c" />
@@ -194,10 +196,12 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputCommands.h" />
     <ClInclude Include="InspectorDialogue.h" />
+    <ClInclude Include="InspectorPreview.h" />
     <ClInclude Include="MFCFrame.h" />
+    <ClInclude Include="MFCInspectorFrame.h" />
     <ClInclude Include="MFCRenderFrame.h" />
-    <ClInclude Include="MyCustom_CEdit.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PreviewCamera.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="SelectDialogue.h" />
@@ -218,6 +222,9 @@
     <ResourceCompile Include="Win32SimpleSample.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="database\data\delete.png" />
+    <Image Include="database\data\disk.png" />
+    <Image Include="database\data\voxel_add.png" />
     <Image Include="toolbar1.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

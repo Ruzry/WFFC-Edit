@@ -64,7 +64,11 @@
       <Filter>MFC</Filter>
     </ClCompile>
     <ClCompile Include="Custom_CEdit.cpp" />
-    <ClCompile Include="MyCustom_CEdit.cpp" />
+    <ClCompile Include="MFCInspectorFrame.cpp">
+      <Filter>MFC</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorPreview.cpp" />
+    <ClCompile Include="PreviewCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -119,7 +123,11 @@
       <Filter>MFC</Filter>
     </ClInclude>
     <ClInclude Include="Custom_CEdit.h" />
-    <ClInclude Include="MyCustom_CEdit.h" />
+    <ClInclude Include="MFCInspectorFrame.h">
+      <Filter>MFC</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorPreview.h" />
+    <ClInclude Include="PreviewCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -131,6 +139,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="toolbar1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="database\data\voxel_add.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="database\data\disk.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="database\data\delete.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

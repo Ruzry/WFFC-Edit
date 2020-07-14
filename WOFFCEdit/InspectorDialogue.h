@@ -1,9 +1,13 @@
 #pragma once
-
+#include "MFCRenderFrame.h"
 #include "resource.h"
 #include "ToolMain.h"
 #include "Custom_CEdit.h"
-#include "MyCustom_CEdit.h"
+#include "InspectorPreview.h"
+#include "SceneObject.h"
+#include "MFCInspectorFrame.h"
+#include "InputCommands.h"
+
 // InspectorDialogue dialog
 
 class InspectorDialogue : public CDialogEx
@@ -14,7 +18,7 @@ public:
 	InspectorDialogue(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~InspectorDialogue();
 
-
+	//afx_msg int Create(UINT nIDTemplate, CWnd* pParentWnd);
 
 
 // Dialog Data
@@ -22,23 +26,31 @@ public:
 	enum { IDD = IDD_DIALOG2 };
 #endif
 
-	void initializeConnection(ToolMain* toolSystem, std::vector<DisplayObject>* display_List, std::vector<int>* selectedObjects);
+	void initializeConnection(ToolMain* toolSystem);
 	void update();
 	void updateSelectionEditText();
 	void updateTransformEditText();
 	void resetSliders();
 
+	void buildDisplayList(std::vector<SceneObject>* sceneGraph) { m_d3d11Renderer.BuildDisplayList(sceneGraph); }
+	void updateDisplayList(SceneObject newSceneObject) { m_d3d11Renderer.updateDisplayList(newSceneObject); }
 
 private:
 	ToolMain* m_Tool_System;
 
 	std::vector<DisplayObject>* m_Display_List;
 	std::vector<int>* m_selectedObjects;
+	InputCommands* m_inputCommands;
+
 	void updateNameEdit();
+
+	InspectorPreview m_d3d11Renderer;
+	CChildRender m_DirXView;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog() override;
+	
 	DECLARE_MESSAGE_MAP()
 public:
 

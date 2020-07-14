@@ -32,20 +32,20 @@ BOOL MFCMain::InitInstance()
 	m_frame->ShowWindow(SW_SHOW);
 	m_frame->UpdateWindow();
 
-
+	
 	//get the rect from the MFC window so we can get its dimensions
 	m_toolHandle = m_frame->m_DirXView.GetSafeHwnd();				//handle of directX child window
 	m_frame->m_DirXView.GetClientRect(&WindowRECT);
 	m_width		= WindowRECT.Width();
 	m_height	= WindowRECT.Height();
 
-	m_ToolSystem.onActionInitialise(m_toolHandle, m_width, m_height);
+	m_ToolSystem.onActionInitialise(m_toolHandle, &m_frame->m_DirXView, m_width, m_height);
 
 	m_InspectorDialogue.Create(IDD_DIALOG2);	//Start up modeless
-	m_InspectorDialogue.initializeConnection(&m_ToolSystem, m_ToolSystem.getDisplayList(), m_ToolSystem.getSelectedObjects());
+	m_InspectorDialogue.initializeConnection(&m_ToolSystem);
 	m_InspectorDialogue.ShowWindow(SW_SHOW);	//show modeless
 
-	
+	m_InspectorDialogue.buildDisplayList(&m_ToolSystem.m_sceneGraph);
 
 	return TRUE;
 }
@@ -84,7 +84,8 @@ int MFCMain::Run()
 			m_ToolSystem.Tick(&msg);
 			
 			m_InspectorDialogue.update();
-			
+
+
 			//send current object ID to status bar in The main frame
 			m_frame->m_wndStatusBar.SetPaneText(1, statusString.c_str(), 1);	
 		}
@@ -192,6 +193,7 @@ void MFCMain::ToolBarButton1()
 
 	m_ToolSystem.addToSceneGraph(newSceneObject);
 
+	m_InspectorDialogue.updateDisplayList(newSceneObject);
 }
 
 

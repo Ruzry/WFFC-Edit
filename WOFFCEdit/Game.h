@@ -65,6 +65,8 @@ public:
 	bool* getSelected() { return &selected; }
 	DirectX::SimpleMath::Vector3 getCameraPosition() { return m_camPosition; }
 
+	void setMouseInWindow(bool* flag) { m_mouseInWindow = flag; }
+
 private:
 
 	void Update(DX::StepTimer const& timer);
@@ -82,6 +84,7 @@ private:
 	//functionality
 	float								m_movespeed;
 	RECT								m_screenDimensions;
+	bool*								m_mouseInWindow;
 
 	//camera
 	Camera camera;

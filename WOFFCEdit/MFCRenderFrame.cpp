@@ -19,6 +19,8 @@ CChildRender::~CChildRender()
 
 BEGIN_MESSAGE_MAP(CChildRender, CWnd)
 	ON_WM_PAINT()
+	ON_WM_MOUSEMOVE()
+	ON_WM_MOUSELEAVE()
 END_MESSAGE_MAP()
 
 
@@ -41,6 +43,28 @@ BOOL CChildRender::PreCreateWindow(CREATESTRUCT& cs)
 void CChildRender::OnPaint()
 {
 	CPaintDC dc(this); // device context for painting
+}
+
+void CChildRender::OnMouseMove(UINT nFlags, CPoint point)
+{
+	mouseInWindow = true;
+
+	TRACKMOUSEEVENT tme;
+	tme.cbSize = sizeof(tme);
+	tme.hwndTrack = this->GetSafeHwnd();
+	tme.dwFlags = TME_HOVER | TME_LEAVE;
+	tme.dwHoverTime = HOVER_DEFAULT;
+	TrackMouseEvent(&tme);
+
+	CWnd::OnMouseMove(nFlags, point);
+	
+}
+
+void CChildRender::OnMouseLeave()
+{
+	mouseInWindow = false;
+	CWnd::OnMouseLeave();
+	
 }
 
 

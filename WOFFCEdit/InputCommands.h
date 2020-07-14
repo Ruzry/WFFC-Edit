@@ -14,7 +14,7 @@ struct InputCommands
 	bool showCursor;
 
 	float mouseX;
-	float MouseY;
+	float mouseY;
 	bool mouseLeft;
 	bool mouseRight;
 

@@ -55,58 +55,60 @@ void Camera::init()
 	
 }
 
-void Camera::update(InputCommands* input, float m_movespeed)
+void Camera::update(InputCommands* input, float m_movespeed, bool mouseInWindow)
 {
 	////create look direction from Euler angles in m_camOrientation
 	//m_camLookDirection.x = sin((m_camOrientation.y)*m_pi / 180);
 	//m_camLookDirection.z = cos((m_camOrientation.y)*m_pi / 180);
 	//m_camLookDirection.Normalize();
+	m_mouseInWindow = mouseInWindow;
 
-	mouseMovement(input->mouseX, input->MouseY, input->mouseRight);
+	if (mouseInWindow == true) {
+		mouseMovement(input->mouseX, input->mouseY, input->mouseRight);
 
-	//create right vector from look Direction
-	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
-	m_camLookDirection.Cross(m_camRight, m_camUp);
-	
-	float movementSpeed = m_movespeed;
+		//create right vector from look Direction
+		m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
+		m_camLookDirection.Cross(m_camRight, m_camUp);
 
-	if (input->mouseRight) {
+		float movementSpeed = m_movespeed;
 
-		if (input->speedUp)
-		{
-			movementSpeed *= 3.0;
+		if (input->mouseRight) {
 
-		}
-		else
-			movementSpeed = m_movespeed;
+			if (input->speedUp)
+			{
+				movementSpeed *= 3.0;
 
-		//process input and update stuff
-		if (input->forward)
-		{
-			m_camPosition += m_camLookDirection * movementSpeed;
-		}
-		if (input->back)
-		{
-			m_camPosition -= m_camLookDirection * movementSpeed;
-		}
-		if (input->right)
-		{
-			m_camPosition += m_camRight * movementSpeed;
-		}
-		if (input->left)
-		{
-			m_camPosition -= m_camRight * movementSpeed;
-		}
-		if (input->up)
-		{
-			m_camPosition -= m_camUp * movementSpeed;
-		}
-		if (input->down)
-		{
-			m_camPosition += m_camUp * movementSpeed;
+			}
+			else
+				movementSpeed = m_movespeed;
+
+			//process input and update stuff
+			if (input->forward)
+			{
+				m_camPosition += m_camLookDirection * movementSpeed;
+			}
+			if (input->back)
+			{
+				m_camPosition -= m_camLookDirection * movementSpeed;
+			}
+			if (input->right)
+			{
+				m_camPosition += m_camRight * movementSpeed;
+			}
+			if (input->left)
+			{
+				m_camPosition -= m_camRight * movementSpeed;
+			}
+			if (input->up)
+			{
+				m_camPosition -= m_camUp * movementSpeed;
+			}
+			if (input->down)
+			{
+				m_camPosition += m_camUp * movementSpeed;
+			}
 		}
 	}
-
 	//update lookat point
 	m_camLookAt = m_camPosition + m_camLookDirection;
 
@@ -154,7 +156,6 @@ void Camera::mouseMovement(float xPos, float yPos, bool rightMouseButton)
 float Camera::toRadians(float degrees)
 {
 	float radians = (degrees * m_pi) / 180;
-
 
 	return radians;
 }

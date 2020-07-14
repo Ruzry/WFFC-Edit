@@ -62,8 +62,6 @@ void Game::Initialize(HWND window, int width, int height)
     m_mouse = std::make_unique<Mouse>();
     m_mouse->SetWindow(window);
 
-	//ShowCursor(false);
-
     m_deviceResources->SetWindow(window, width, height);
 
     m_deviceResources->CreateDeviceResources();
@@ -133,11 +131,11 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-
 	Vector3 planarMotionVector = camera.getLookDirection();
 	planarMotionVector.y = 0.0;
 
-	camera.update(&m_InputCommands, m_movespeed);
+	camera.update(&m_InputCommands, m_movespeed, *m_mouseInWindow);
+
 	m_camPosition = camera.getCamPosition();
 
 	m_view = Matrix::CreateLookAt(camera.getCamPosition(), camera.getCamLookAt(), -camera.getCamUp());
@@ -174,6 +172,10 @@ void Game::Update(DX::StepTimer const& timer)
 
    
 }
+
+/**
+	Update for selection feature
+*/
 void Game::updateSelection()
 {
 	if (selected) {
@@ -199,8 +201,8 @@ void Game::updateSelection()
 
 
 	}
-
-	if (m_InputCommands.unselect == true) {
+	else{
+	//if (m_InputCommands.unselect == true) {
 		selected = false;
 
 		if (previousIDs.size() > 0) {
@@ -490,14 +492,8 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_Z_Scale_Slider_Offset = 0.0f;
 
 
-
-
-		m_displayList.push_back(newDisplayObject);
-		
-	}
-		
-		
-		
+		m_displayList.push_back(newDisplayObject);	
+	}	
 }
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
@@ -603,14 +599,14 @@ void Game::MousePicking(InputCommands* input)
 
 	//Setup near and far planes of frustum with mouse X and mouse Y passed down from Toolmain.
 	//they may look the same but note, the difference in Z;
-	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.MouseY, 0.0f, 1.0f);
-	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.MouseY, 1.0f, 1.0f);
+	const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.mouseY, 0.0f, 1.0f);
+	const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouseX, m_InputCommands.mouseY, 1.0f, 1.0f);
 
 	previousID = selectedID;
 
 	previousIDs = selectedIDs;
 
-	//selected = false;
+	selected = false;
 
 	//Loop through entire display list of of objects and pick with in each turn.
 	for (int i = 0; i < m_displayList.size(); i++) {
@@ -634,6 +630,8 @@ void Game::MousePicking(InputCommands* input)
 		//turn the transformed points into our picking vector.
 		XMVECTOR pickingVector = farPoint - nearPoint;
 		pickingVector = XMVector3Normalize(pickingVector);
+
+		//selected = false;
 
 		//Loop through mesh list for object
 		for (int y = 0; y < m_displayList[i].m_model.get()->meshes.size(); y++)
