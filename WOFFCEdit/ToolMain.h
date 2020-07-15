@@ -41,15 +41,20 @@ public:	//variables
 
 	std::vector<DisplayObject>* getDisplayList() { return m_DisplayList; }
 	std::vector<int>* getSelectedObjects() { return m_selectedObjects; }
+	std::vector<int>* getPreviousObjects() { return m_d3dRenderer.getPreviousIDs(); }
 	InputCommands* getInputCommands() { return &m_toolInputCommands; }
 	bool* getSelected() { return m_selected; }
+	void setSelected(bool flag) { m_d3dRenderer.setSelected(flag); }
+
 
 	bool addToSceneGraph(SceneObject newSceneObject);
+	void removeObject(int objectID) { m_d3dRenderer.removeObject(objectID); }
+	void updateSceneGraph();
 
 private:	//methods
 	void	onContentAdded();
 	std::vector<DisplayObject>* m_DisplayList;
-	void updateSceneGraph();
+	
 		
 private:	//variables
 	HWND*	m_toolHandle;		//Handle to the  window

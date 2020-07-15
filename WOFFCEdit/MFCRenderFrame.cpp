@@ -10,6 +10,7 @@
 
 CChildRender::CChildRender()
 {
+	scrollPosition = 0.0f;
 }
 
 CChildRender::~CChildRender()
@@ -21,6 +22,7 @@ BEGIN_MESSAGE_MAP(CChildRender, CWnd)
 	ON_WM_PAINT()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSELEAVE()
+	ON_WM_MOUSEHWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -65,6 +67,14 @@ void CChildRender::OnMouseLeave()
 	mouseInWindow = false;
 	CWnd::OnMouseLeave();
 	
+}
+
+BOOL CChildRender::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+
+	scrollPosition += zDelta;
+
+	return CWnd::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 

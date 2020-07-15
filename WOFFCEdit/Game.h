@@ -51,6 +51,7 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 	void updateDisplayList(SceneObject newSceneObject);
+	void removeObject(int selectedID);
 
 	//Added Functionality
 	void MousePicking(InputCommands* input);
@@ -62,7 +63,10 @@ public:
 
 	std::vector<DisplayObject>* getDisplayList() { return &m_displayList; }
 	std::vector<int>* getSelectedIDs() { return &selectedIDs; }
+	std::vector<int>* getPreviousIDs() { return &previousIDs; }
+
 	bool* getSelected() { return &selected; }
+	void setSelected(bool flag) { selected = flag; }
 	DirectX::SimpleMath::Vector3 getCameraPosition() { return m_camPosition; }
 
 	void setMouseInWindow(bool* flag) { m_mouseInWindow = flag; }

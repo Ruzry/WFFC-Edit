@@ -4,13 +4,13 @@
 
 SceneObject::SceneObject()
 {
-	ID = 0;
+	ID = -1;
 	chunk_ID =0 ;
 	model_path ="";
 	tex_diffuse_path = "";
 	posX = 0.0f;	posY = 0.0f;	posZ = 0.0f;
 	rotX = 0.0f;	rotY = 0.0f;	rotZ = 0.0f;
-	scaX = 0.0f;	scaY = 0.0f;	scaZ = 0.0f;
+	scaX = 1.0f;	scaY = 1.0f;	scaZ = 1.0f;
 	render = true;
 	collision = false;
 	collision_mesh ="";
@@ -54,3 +54,5 @@ SceneObject::SceneObject()
 SceneObject::~SceneObject()
 {
 }
+
+

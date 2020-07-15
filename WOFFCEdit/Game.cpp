@@ -202,7 +202,6 @@ void Game::updateSelection()
 
 	}
 	else{
-	//if (m_InputCommands.unselect == true) {
 		selected = false;
 
 		if (previousIDs.size() > 0) {
@@ -416,7 +415,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 	int numObjects = SceneGraph->size();
 	for (int i = 0; i < numObjects; i++)
 	{
-		
+
 		//create a temp display object that we will populate then append to the display list.
 		DisplayObject newDisplayObject;
 		
@@ -445,7 +444,11 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 			}
 		});
 
+		newDisplayObject.m_modelPath = SceneGraph->at(i).model_path;
+		newDisplayObject.m_texDiffusePath = SceneGraph->at(i).tex_diffuse_path;
+
 		newDisplayObject.m_name = SceneGraph->at(i).name;
+		newDisplayObject.m_ID = SceneGraph->at(i).ID;
 
 		//set position
 		newDisplayObject.m_position.x = SceneGraph->at(i).posX;
@@ -544,6 +547,12 @@ void Game::updateDisplayList(SceneObject newSceneObject)
 		}
 	});
 
+	newDisplayObject.m_ID = newSceneObject.ID;
+	newDisplayObject.m_name = newSceneObject.name;
+
+	newDisplayObject.m_modelPath = newSceneObject.model_path;
+	newDisplayObject.m_texDiffusePath = newSceneObject.tex_diffuse_path;
+
 	//set position
 	newDisplayObject.m_position.x = newSceneObject.posX;
 	newDisplayObject.m_position.y = newSceneObject.posY;
@@ -589,6 +598,11 @@ void Game::updateDisplayList(SceneObject newSceneObject)
 	newDisplayObject.m_Z_Scale_Slider_Offset = 0.0f;
 
 	m_displayList.push_back(newDisplayObject);
+}
+
+void Game::removeObject(int selectedID)
+{
+	m_displayList.erase(m_displayList.begin() + selectedID);
 }
 
 void Game::MousePicking(InputCommands* input)

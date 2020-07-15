@@ -8,8 +8,9 @@
 #include "MFCInspectorFrame.h"
 #include "InputCommands.h"
 
-// InspectorDialogue dialog
 
+
+// InspectorDialogue dialog
 class InspectorDialogue : public CDialogEx
 {
 	DECLARE_DYNAMIC(InspectorDialogue)
@@ -34,6 +35,7 @@ public:
 
 	void buildDisplayList(std::vector<SceneObject>* sceneGraph) { m_d3d11Renderer.BuildDisplayList(sceneGraph); }
 	void updateDisplayList(SceneObject newSceneObject) { m_d3d11Renderer.updateDisplayList(newSceneObject); }
+	void removeObject(int objectID) { m_d3d11Renderer.removeObject(objectID); }
 
 private:
 	ToolMain* m_Tool_System;
@@ -46,6 +48,8 @@ private:
 
 	InspectorPreview m_d3d11Renderer;
 	CChildRender m_DirXView;
+
+	int m_zoomValue;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -144,4 +148,6 @@ public:
 	afx_msg void OnEnChangeEditNameInput();
 	afx_msg void OnEnSetfocusEditNameInput();
 	afx_msg void OnEnKillfocusEditNameInput();
+	CSliderCtrl slider_Zoom;
+	afx_msg void OnNMCustomdrawSliderZoom(NMHDR *pNMHDR, LRESULT *pResult);
 };

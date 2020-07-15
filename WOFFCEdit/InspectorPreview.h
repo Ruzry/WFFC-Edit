@@ -39,10 +39,15 @@ public:
 
 	void BuildDisplayList(std::vector<SceneObject> * SceneGraph); //note vector passed by reference 
 	void updateDisplayList(SceneObject newSceneObject);
+	void removeObject(int selectedID);
+
+	int getPreviousObjectID() { return m_previousObjectID; }
 
 	void setSelectedObjects(std::vector<int>* selectedObjects) { m_selectedObjects = selectedObjects; }
+	void setMainWindowDisplayList(std::vector<DisplayObject>* mainDisplayList) { m_mainDisplayList = mainDisplayList; }
 	void setInputCommands(InputCommands* input) { m_inputCommands = input; }
 	void setMouseInWindow(bool* flag) { m_mouseInWindow = flag; }
+	void setScrollValue(int* scrollVal) { m_scrollValue = scrollVal; }
 
 	void manageInput();
 
@@ -54,9 +59,17 @@ private:
 
 	//tool specific
 	std::vector<DisplayObject>			m_displayList;
+	std::vector<DisplayObject>*			m_mainDisplayList;
 	InputCommands*						m_inputCommands;
 	std::vector<int>*					m_selectedObjects;
 	bool*								m_mouseInWindow;
+	int									m_previousObjectID;
+
+	//Zoom Funtionality
+	int*								m_scrollValue;
+
+
+
 
 	//functionality
 	float								m_movespeed;
@@ -64,6 +77,9 @@ private:
 
 	//camera
 	PreviewCamera camera;
+
+	//Object Scaling
+	float m_xScale, m_yScale, m_zScale, m_scaleFactor;
 
 	//Object rotation
 	float m_camRotRate, m_yaw, m_pitch, m_rotSensitivity, m_lastX, m_lastY;

@@ -17,7 +17,7 @@ void PreviewCamera::init()
 	//camera
 	m_camPosition.x = 0.0f;
 	m_camPosition.y = 0.0f;
-	m_camPosition.z = -2.0f;
+	m_camPosition.z = -10.0f;
 
 	m_camOrientation.x = 0;
 	m_camOrientation.y = 0;
@@ -51,8 +51,10 @@ void PreviewCamera::init()
 	m_cameraSensitivity = 0.5f;
 }
 
-void PreviewCamera::update()
+void PreviewCamera::update(int* scrollVal)
 {
+	m_camPosition.z = *scrollVal - 10;
+
 	//create look direction from Euler angles in m_camOrientation
 	m_camLookDirection.x = sin((m_camOrientation.y)*m_pi / 180);
 	m_camLookDirection.z = cos((m_camOrientation.y)*m_pi / 180);

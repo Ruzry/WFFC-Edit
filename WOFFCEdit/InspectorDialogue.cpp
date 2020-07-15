@@ -36,6 +36,9 @@ void InspectorDialogue::initializeConnection(ToolMain * toolSystem)
 	m_d3d11Renderer.setSelectedObjects(m_Tool_System->getSelectedObjects());
 	m_d3d11Renderer.setInputCommands(m_Tool_System->getInputCommands());
 	m_d3d11Renderer.setMouseInWindow(&m_DirXView.mouseInWindow);
+	m_d3d11Renderer.setMainWindowDisplayList(m_Tool_System->getDisplayList());
+	m_d3d11Renderer.setScrollValue(&m_zoomValue);
+	
 }
 
 /**
@@ -51,6 +54,11 @@ void InspectorDialogue::update()
 	updateNameEdit();
 
 	if (m_selectedObjects->size() == 1) {
+
+		//If the selected object has changed but not before a de select
+		if (m_selectedObjects->at(0) != m_d3d11Renderer.getPreviousObjectID()) {
+			slider_Zoom.SetPos(0);
+		}
 		
 		//Update Sliders
 
@@ -296,6 +304,7 @@ void InspectorDialogue::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Check(pDX, IDC_CHECK_VISIBLE, check_enableDisable);
 	DDX_Control(pDX, IDC_EDIT_NAME_INPUT, edit_Set_Name);
+	DDX_Control(pDX, IDC_SLIDER_ZOOM, slider_Zoom);
 }
 
 /**
@@ -336,18 +345,21 @@ BOOL InspectorDialogue::OnInitDialog()
 	slider_Z_Scale.SetRange(-200, 200, true);
 	slider_Z_Scale.SetPos(0);
 
+	slider_Zoom.SetRange(-100, 100, true);
+	slider_Zoom.SetPos(0);
+
 	//edit_test.SubclassDlgItem(IDC_EDIT1, this);
 	//edit_X_Pos.SubclassDlgItem(IDC_EDIT_X_POS, this);
 
 		// create a view to occupy the client area of the frame //This is where DirectX is rendered
-	if (!m_DirXView.Create(NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect(35, 220, 605, 445), this, AFX_IDW_PANE_FIRST, NULL))
+	if (!m_DirXView.Create(NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect(35, 220, 580, 445), this, AFX_IDW_PANE_FIRST, NULL))
 	{
 		TRACE0("Failed to create view window\n");
 		return -1;
 	}
 
 	m_DirXView.ShowWindow(SW_SHOW);
-	m_d3d11Renderer.Initialize(m_DirXView.GetSafeHwnd(), 600, 440);
+	m_d3d11Renderer.Initialize(m_DirXView.GetSafeHwnd(), 575, 440);
 
 	return true;
 }
@@ -397,6 +409,7 @@ BEGIN_MESSAGE_MAP(InspectorDialogue, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT_NAME_INPUT, &InspectorDialogue::OnEnChangeEditNameInput)
 	ON_EN_SETFOCUS(IDC_EDIT_NAME_INPUT, &InspectorDialogue::OnEnSetfocusEditNameInput)
 	ON_EN_KILLFOCUS(IDC_EDIT_NAME_INPUT, &InspectorDialogue::OnEnKillfocusEditNameInput)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER_ZOOM, &InspectorDialogue::OnNMCustomdrawSliderZoom)
 END_MESSAGE_MAP()
 
 
@@ -898,4 +911,15 @@ void InspectorDialogue::OnEnSetfocusEditNameInput()
 void InspectorDialogue::OnEnKillfocusEditNameInput()
 {
 	edit_Set_Name_IsFocused = false;
+}
+
+
+void InspectorDialogue::OnNMCustomdrawSliderZoom(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	if (m_selectedObjects->size() == 1) {
+		m_zoomValue = -slider_Zoom.GetPos();
+	}
+	else {
+		slider_Zoom.SetPos(0);
+	}
 }

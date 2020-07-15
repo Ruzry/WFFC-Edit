@@ -7,9 +7,11 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_FILE_SAVETERRAIN, &MFCMain::MenuFileSaveTerrain)
 	/*ON_COMMAND(ID_FILE_TEST, &MFCMain::MenuFileTest)*/
 	ON_COMMAND(ID_EDIT_SELECT, &MFCMain::MenuEditSelect)
-	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
+	ON_COMMAND(ID_BUTTON40010,	&MFCMain::SaveBarButton)
 	ON_COMMAND(ID_FILE_SAVEOBJECTS, &MFCMain::MenuFileSaveObjects)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
+	ON_COMMAND(ID_BUTTON40001, &MFCMain::AddObjectButton)
+	ON_COMMAND(ID_BUTTON40011, &MFCMain::DeleteObjectButton)
 END_MESSAGE_MAP()
 
 BOOL MFCMain::InitInstance()
@@ -94,6 +96,7 @@ int MFCMain::Run()
 	return (int)msg.wParam;
 }
 
+
 void MFCMain::MenuFileQuit()
 {
 	//will post message to the message thread that will exit the application normally
@@ -113,7 +116,7 @@ void MFCMain::MenuEditSelect()
 	//modeless dialogue must be declared in the class.   If we do local it will go out of scope instantly and destroy itself
 	m_ToolSelectDialogue.Create(IDD_DIALOG1);	//Start up modeless
 	m_ToolSelectDialogue.ShowWindow(SW_SHOW);	//show modeless
-	m_ToolSelectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, m_ToolSystem.getDisplayList(), m_ToolSystem.m_selectedObjects, m_ToolSystem.getSelected());
+	m_ToolSelectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, m_ToolSystem.getDisplayList(), m_ToolSystem.m_selectedObjects, m_ToolSystem.getPreviousObjects(), m_ToolSystem.getSelected());
 }
 
 void MFCMain::MenuFileTest()
@@ -129,10 +132,45 @@ void MFCMain::MenuFileSaveObjects()
 
 void MFCMain::ToolBarButton1()
 {
+
+}
+
+void MFCMain::SaveBarButton()
+{
+	m_InspectorDialogue.resetSliders();
+	m_ToolSystem.onActionSave();
+}
+
+void MFCMain::AddObjectButton()
+{
 	SceneObject newSceneObject;
 
 	newSceneObject.model_path = "database/data/placeholder.cmo";
 	newSceneObject.tex_diffuse_path = "database/data/placeholder.dds";
+
+	m_ToolSystem.addToSceneGraph(newSceneObject);
+
+	m_InspectorDialogue.updateDisplayList(newSceneObject);
+}
+
+void MFCMain::DeleteObjectButton()
+{
+	//Removed due till selection code is updated.
+	//Will remove object but leave ID identification incorrect for remaining objects
+	/**
+	for (int i = 0; i < m_ToolSystem.getSelectedObjects()->size(); i++) {
+		
+		m_InspectorDialogue.removeObject(m_ToolSystem.getSelectedObjects()->at(i));
+		m_ToolSystem.removeObject(m_ToolSystem.getSelectedObjects()->at(i));
+		m_ToolSystem.updateSceneGraph();
+		m_ToolSystem.setSelected(false);
+	}
+	*/
+}
+
+
+SceneObject MFCMain::setDefaultValues(SceneObject newSceneObject)
+{
 
 	newSceneObject.posX = 0.0f;
 	newSceneObject.posY = 0.0f;
@@ -191,10 +229,11 @@ void MFCMain::ToolBarButton1()
 	newSceneObject.light_linear = 0.0f;
 	newSceneObject.light_quadratic = 0.0f;
 
-	m_ToolSystem.addToSceneGraph(newSceneObject);
 
-	m_InspectorDialogue.updateDisplayList(newSceneObject);
+
+	return newSceneObject;
 }
+
 
 
 MFCMain::MFCMain()

@@ -76,7 +76,7 @@ void InspectorPreview::Initialize(HWND window, int width, int height)
 
 #pragma region Frame Update
 void InspectorPreview::Tick()
-{	
+{
 
 	m_timer.Tick([&]()
 	{
@@ -96,15 +96,24 @@ void InspectorPreview::Tick()
 #endif
 
 	Render();
+
+
+	if (m_selectedObjects->size() == 1) {
+		m_previousObjectID = m_selectedObjects->at(0);
+	}
+	else {
+		m_previousObjectID = -1;
+	}
 }
 
 
 void InspectorPreview::Update(DX::StepTimer const & timer)
 {
+	
 	Vector3 planarMotionVector = camera.getLookDirection();
 	planarMotionVector.y = 0.0;
 
-	camera.update();
+	camera.update(m_scrollValue);
 	m_camPosition = camera.getCamPosition();
 
 	m_view = Matrix::CreateLookAt(camera.getCamPosition(), camera.getCamLookAt(), -camera.getCamUp());
@@ -117,9 +126,33 @@ void InspectorPreview::Update(DX::StepTimer const & timer)
 		m_yaw = 0.0f;
 		m_pitch = 0.0f;
 
+		m_xScale = 1.0f;
+		m_yScale = 1.0f;
+		m_zScale = 1.0f;
+		
 	}
-	//m_displayChunk.m_terrainEffect->SetView(m_view);
-	//m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
+	else {
+
+		int scaleBy = 0;
+		float difference = 1 - m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.x + m_mainDisplayList->at(m_selectedObjects->at(0)).m_X_Scale_Slider_Offset;
+
+		m_scaleFactor = m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.x + m_mainDisplayList->at(m_selectedObjects->at(0)).m_X_Scale_Slider_Offset;
+
+		if (1 - m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.y + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Y_Scale_Slider_Offset > difference) {
+			difference = 1 - m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.y + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Y_Scale_Slider_Offset;
+			m_scaleFactor = m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.y + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Y_Scale_Slider_Offset;
+		}
+		if (1 - m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.z + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset > difference) {
+			difference = 1 - m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.z + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset;
+			m_scaleFactor = m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.z + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset;
+		}
+		
+		m_xScale = (m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.x + m_mainDisplayList->at(m_selectedObjects->at(0)).m_X_Scale_Slider_Offset);
+		m_yScale = (m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.y + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Y_Scale_Slider_Offset);
+		m_zScale = (m_mainDisplayList->at(m_selectedObjects->at(0)).m_scale.z + m_mainDisplayList->at(m_selectedObjects->at(0)).m_Z_Scale_Slider_Offset);
+
+
+	}
 
 	
 
@@ -200,7 +233,7 @@ void InspectorPreview::Render()
 
 	
 	m_deviceResources->PIXBeginEvent(L"Draw model");
-	const XMVECTORF32 scale = { 1.0, 1.0, 1.0};
+	const XMVECTORF32 scale = { m_xScale, m_yScale, m_zScale};
 	const XMVECTORF32 translate = {0.0f, 0.0f, 0.0f };
 	//convert degrees into radians for rotation matrix
 	XMVECTOR rotate = Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, 0.0f);
@@ -321,7 +354,11 @@ void InspectorPreview::BuildDisplayList(std::vector<SceneObject>* SceneGraph)
 			}
 		});
 
+		newDisplayObject.m_modelPath = SceneGraph->at(i).model_path;
+		newDisplayObject.m_texDiffusePath = SceneGraph->at(i).tex_diffuse_path;
+
 		newDisplayObject.m_name = SceneGraph->at(i).name;
+		newDisplayObject.m_ID = SceneGraph->at(i).ID;
 
 		//set position
 		newDisplayObject.m_position.x = SceneGraph->at(i).posX;
@@ -405,6 +442,12 @@ void InspectorPreview::updateDisplayList(SceneObject newSceneObject)
 		}
 	});
 
+	newDisplayObject.m_ID = newSceneObject.ID;
+	newDisplayObject.m_name = newSceneObject.name;
+
+	newDisplayObject.m_modelPath = newSceneObject.model_path;
+	newDisplayObject.m_texDiffusePath = newSceneObject.tex_diffuse_path;
+
 	//set position
 	newDisplayObject.m_position.x = newSceneObject.posX;
 	newDisplayObject.m_position.y = newSceneObject.posY;
@@ -450,6 +493,11 @@ void InspectorPreview::updateDisplayList(SceneObject newSceneObject)
 	newDisplayObject.m_Z_Scale_Slider_Offset = 0.0f;
 
 	m_displayList.push_back(newDisplayObject);
+}
+
+void InspectorPreview::removeObject(int selectedID)
+{
+	m_displayList.erase(m_displayList.begin() + selectedID);
 }
 
 #pragma region Direct3D Resources

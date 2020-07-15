@@ -34,6 +34,7 @@ private:
 	int m_width;		
 	int m_height;
 	
+	SceneObject setDefaultValues(SceneObject newSceneObject);
 	//Interface funtions for menu and toolbar etc requires
 	afx_msg void MenuFileQuit();
 	afx_msg void MenuFileSaveTerrain();
@@ -43,6 +44,9 @@ private:
 	afx_msg void MenuFileSaveObjects();
 
 	afx_msg	void ToolBarButton1();
+	afx_msg void SaveBarButton();
+	afx_msg void AddObjectButton();
+	afx_msg void DeleteObjectButton();
 
 
 	DECLARE_MESSAGE_MAP()	// required macro for message map functionality  One per class

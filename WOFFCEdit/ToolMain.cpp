@@ -434,8 +434,8 @@ void ToolMain::UpdateInput(MSG * msg)
 
 	if (m_keyArray['C']) 
 	{
-		if(m_mainRenderFrame->mouseInWindow == true)
-			m_toolInputCommands.unselect = true;
+		if (m_mainRenderFrame->mouseInWindow == true)
+			setSelected(false);
 	}
 	else m_toolInputCommands.unselect = false;
 
@@ -470,9 +470,32 @@ void ToolMain::UpdateInput(MSG * msg)
 
 bool ToolMain::addToSceneGraph(SceneObject newSceneObject)
 {
+	std::set<int> usedIDs, unUsedIDs;
+
+	for (int i = 0; i < m_sceneGraph.size(); i++) {
+		usedIDs.insert(m_sceneGraph.at(i).ID);
+	
+	}
+
+
+	for (int i = 0; i < m_sceneGraph.size(); i++) {
+		if (usedIDs.count(i) == 0) {
+			unUsedIDs.insert(i);
+		}
+	
+	}
+
 
 	//Add to Scenegraph 
-	newSceneObject.ID = m_sceneGraph.size();
+
+	if (unUsedIDs.size() > 0) {
+		newSceneObject.ID = *unUsedIDs.begin();
+		unUsedIDs.erase(unUsedIDs.begin());
+	}
+	else {
+		newSceneObject.ID = m_sceneGraph.size();
+	}
+	
 	newSceneObject.chunk_ID = 0;
 	m_sceneGraph.push_back(newSceneObject);
 	m_d3dRenderer.updateDisplayList(newSceneObject);
@@ -483,45 +506,51 @@ bool ToolMain::addToSceneGraph(SceneObject newSceneObject)
 
 void ToolMain::updateSceneGraph()
 {
-	for (int i = 0; i < m_sceneGraph.size(); i++) {
+	m_sceneGraph.clear();
+
+	for (int i = 0; i < m_DisplayList->size(); i++) {
 	
+		SceneObject newSceneObject;
 		//Consoldate position values in respect to the offsets and reset the offset
 		m_DisplayList->at(i).applyOffsetValues();
 
-		m_sceneGraph[i].name = m_DisplayList->at(i).m_name;
+		newSceneObject.name = m_DisplayList->at(i).m_name;
+		newSceneObject.ID = m_DisplayList->at(i).m_ID;
+		newSceneObject.model_path = m_DisplayList->at(i).m_modelPath;
+		newSceneObject.tex_diffuse_path = m_DisplayList->at(i).m_texDiffusePath;
 
 		//Position
-		m_sceneGraph[i].posX = m_DisplayList->at(i).m_position.x;
-		m_sceneGraph[i].posY = m_DisplayList->at(i).m_position.y;
-		m_sceneGraph[i].posZ = m_DisplayList->at(i).m_position.z;
+		newSceneObject.posX = m_DisplayList->at(i).m_position.x;
+		newSceneObject.posY = m_DisplayList->at(i).m_position.y;
+		newSceneObject.posZ = m_DisplayList->at(i).m_position.z;
 	
 		//Orientation
-		m_sceneGraph[i].rotX = m_DisplayList->at(i).m_orientation.x;
-		m_sceneGraph[i].rotY = m_DisplayList->at(i).m_orientation.y;
-		m_sceneGraph[i].rotZ = m_DisplayList->at(i).m_orientation.z;
+		newSceneObject.rotX = m_DisplayList->at(i).m_orientation.x;
+		newSceneObject.rotY = m_DisplayList->at(i).m_orientation.y;
+		newSceneObject.rotZ = m_DisplayList->at(i).m_orientation.z;
 
 		//Scale
-		m_sceneGraph[i].scaX = m_DisplayList->at(i).m_scale.x;
-		m_sceneGraph[i].scaY = m_DisplayList->at(i).m_scale.y;
-		m_sceneGraph[i].scaZ = m_DisplayList->at(i).m_scale.z;
+		newSceneObject.scaX = m_DisplayList->at(i).m_scale.x;
+		newSceneObject.scaY = m_DisplayList->at(i).m_scale.y;
+		newSceneObject.scaZ = m_DisplayList->at(i).m_scale.z;
 
 		//Lighting
-		m_sceneGraph[i].light_type = m_DisplayList->at(i).m_light_type;
+		newSceneObject.light_type = m_DisplayList->at(i).m_light_type;
 
-		m_sceneGraph[i].light_diffuse_r = m_DisplayList->at(i).m_light_diffuse_r;
-		m_sceneGraph[i].light_diffuse_g = m_DisplayList->at(i).m_light_diffuse_g;
-		m_sceneGraph[i].light_diffuse_b = m_DisplayList->at(i).m_light_diffuse_b;
+		newSceneObject.light_diffuse_r = m_DisplayList->at(i).m_light_diffuse_r;
+		newSceneObject.light_diffuse_g = m_DisplayList->at(i).m_light_diffuse_g;
+		newSceneObject.light_diffuse_b = m_DisplayList->at(i).m_light_diffuse_b;
 
-		m_sceneGraph[i].light_specular_r = m_DisplayList->at(i).m_light_specular_r;
-		m_sceneGraph[i].light_specular_g = m_DisplayList->at(i).m_light_specular_g;
-		m_sceneGraph[i].light_specular_b = m_DisplayList->at(i).m_light_specular_b;
+		newSceneObject.light_specular_r = m_DisplayList->at(i).m_light_specular_r;
+		newSceneObject.light_specular_g = m_DisplayList->at(i).m_light_specular_g;
+		newSceneObject.light_specular_b = m_DisplayList->at(i).m_light_specular_b;
 
-		m_sceneGraph[i].light_spot_cutoff = m_DisplayList->at(i).m_light_spot_cutoff;
-		m_sceneGraph[i].light_constant = m_DisplayList->at(i).m_light_constant;
-		m_sceneGraph[i].light_linear = m_DisplayList->at(i).m_light_linear;
-		m_sceneGraph[i].light_quadratic = m_DisplayList->at(i).m_light_quadratic;
+		newSceneObject.light_spot_cutoff = m_DisplayList->at(i).m_light_spot_cutoff;
+		newSceneObject.light_constant = m_DisplayList->at(i).m_light_constant;
+		newSceneObject.light_linear = m_DisplayList->at(i).m_light_linear;
+		newSceneObject.light_quadratic = m_DisplayList->at(i).m_light_quadratic;
 
 
-
+		m_sceneGraph.push_back(newSceneObject);
 	}
 }

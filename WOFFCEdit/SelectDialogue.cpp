@@ -32,12 +32,13 @@ SelectDialogue::~SelectDialogue()
 }
 
 ///pass through pointers to the data in the tool we want to manipulate
-void SelectDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<DisplayObject>* displayList, std::vector<int> * selection, bool* selected)
+void SelectDialogue::SetObjectData(std::vector<SceneObject>* SceneGraph, std::vector<DisplayObject>* displayList, std::vector<int> * selection, std::vector<int> * previouseIDs, bool* selected)
 {
 	m_sceneGraph = SceneGraph;
 	m_displayList = displayList;
 	m_currentSelections = selection;
 	m_selected = selected;
+	m_previousSelections = previouseIDs;
 
 	std::wstring_convert<deletable_facet<std::codecvt<wchar_t, char, std::mbstate_t>>> conv;
 	std::wstring tempName, tempVisible;
@@ -75,6 +76,8 @@ void SelectDialogue::End()
 void SelectDialogue::Select()
 {
 	int index = m_listBox.GetCurSel();
+
+	*m_previousSelections = *m_currentSelections;
 
 	m_currentSelections->clear();
 	m_currentSelections->push_back(m_sceneGraph->at(index).ID);

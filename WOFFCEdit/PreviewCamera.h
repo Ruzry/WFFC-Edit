@@ -11,7 +11,7 @@ public:
 	~PreviewCamera();
 
 	void init();
-	void update();
+	void update(int* scrollVal);
 
 	DirectX::SimpleMath::Vector3 getLookDirection() { return m_camLookDirection; }
 	DirectX::SimpleMath::Vector3 getCamPosition() { return m_camPosition; }
